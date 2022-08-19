@@ -1,3 +1,2 @@
-export function foo(): number {
-  return 42;
-}
+export * from "./FontManager";
+export * from "./LabelPool";

@@ -1,8 +1,15 @@
+// -*- jsonc -*-
 {
   "extends": "@foxglove/tsconfig/base",
   "include": ["./src/**/*"],
   "compilerOptions": {
     "rootDir": "./src",
-    "outDir": "./dist/esm"
+    "outDir": "./dist/esm",
+
+    // DOM and JSX settings should only apply to *.stories.*, but VS Code doesn't allow using a
+    // different tsconfig for different files in the project.
+    // https://github.com/microsoft/vscode/issues/12463
+    "lib": ["DOM", "es2020"],
+    "jsx": "react-jsx"
   }
 }
