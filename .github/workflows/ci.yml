@@ -8,10 +8,8 @@ on:
     branches: ["*"]
 
 jobs:
-  all:
-    name: all
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
 
@@ -32,3 +30,13 @@ jobs:
         run: yarn publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+
+  chromatic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish to Chromatic
+        uses: chromaui/action@v1
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          autoAcceptChanges: main
+          exitOnceUploaded: true
