@@ -58,7 +58,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "rimraf": "3.0.2",
-    "three": "0.146.0",
+    "three": "0.148.0",
     "ts-jest": "28.0.8",
     "typescript": "4.8.4"
   }
