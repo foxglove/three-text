@@ -43,7 +43,7 @@
     "@types/node": "18.11.9",
     "@types/react": "18.0.26",
     "@types/three": "0.146.0",
-    "@typescript-eslint/eslint-plugin": "5.47.0",
+    "@typescript-eslint/eslint-plugin": "5.49.0",
     "@typescript-eslint/parser": "5.47.0",
     "chromatic": "6.14.0",
     "eslint": "8.31.0",
