@@ -1389,10 +1389,10 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.36.0.tgz#9837f768c03a1e4a30bd304a64fb8844f0e72efe"
   integrity sha512-lxJ9R5ygVm8ZWgYdUweoq5ownDlJ4upvoWmO4eLxBYHdMo+vZ/Rx0EN6MbKWDJOSUGrqJy2Gt+Dyv/VKml0fjg==
 
-"@foxglove/eslint-plugin@0.20.0":
-  version "0.20.0"
-  resolved "https://registry.yarnpkg.com/@foxglove/eslint-plugin/-/eslint-plugin-0.20.0.tgz#386933c44b38ba1deccb345e9941f65c040ae063"
-  integrity sha512-/rSWnqworu9kGd1bnfijF/aRof+hc4XmVyVLi46GKBYbeNAloh1IhZ0w8cXsio7uqIc2fxaEJvSXIrtV3cBMRA==
+"@foxglove/eslint-plugin@0.21.0":
+  version "0.21.0"
+  resolved "https://registry.yarnpkg.com/@foxglove/eslint-plugin/-/eslint-plugin-0.21.0.tgz#9be2b5d0c46ac0f7c86aec7341cb479e4e8c29a6"
+  integrity sha512-bSSwYZ7D5xutMv9kFA/HFBuVHMjWVrkW+nyrVIo2UCoywm3Oh9FG7Ag1tv7SsS2c3bZ/pIb8KoeWRf7J5Fctrw==
   dependencies:
     "@typescript-eslint/utils" "^5"
     tsutils "^3"
