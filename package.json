@@ -38,6 +38,8 @@
     "@foxglove/eslint-plugin": "0.21.0",
     "@foxglove/tsconfig": "1.1.0",
     "@storybook/addon-essentials": "6.5.16",
+    "@storybook/builder-webpack5": "6.5.16",
+    "@storybook/manager-webpack5": "6.5.16",
     "@storybook/react": "6.5.16",
     "@types/jest": "29.5.0",
     "@types/node": "18.15.10",
