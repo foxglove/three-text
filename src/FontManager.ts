@@ -126,7 +126,7 @@ export class FontManager extends EventDispatcher<{ type: "atlasChange" }> {
         // Use the full width in order to avoid character overlaps and z-fighting. Use glyphAdvance
         // if it is larger than width (e.g. for space characters). Subtract 1x the buffer so we
         // don't end up with *too* much space between characters.
-        xAdvance: Math.max(sdf.glyphAdvance as number, sdf.width - buffer),
+        xAdvance: Math.max(sdf.glyphAdvance, sdf.width - buffer),
       };
       maxAscent = Math.max(maxAscent, sdf.glyphTop);
       x += sdf.width;
