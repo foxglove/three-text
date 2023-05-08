@@ -43,7 +43,7 @@
     "@storybook/react": "6.5.16",
     "@types/jest": "29.5.0",
     "@types/node": "18.15.10",
-    "@types/react": "18.0.29",
+    "@types/react": "18.2.6",
     "@types/three": "0.146.0",
     "@typescript-eslint/eslint-plugin": "5.56.0",
     "@typescript-eslint/parser": "5.56.0",
