@@ -41,7 +41,7 @@
     "@storybook/builder-webpack5": "6.5.16",
     "@storybook/manager-webpack5": "6.5.16",
     "@storybook/react": "6.5.16",
-    "@types/jest": "29.5.0",
+    "@types/jest": "29.5.1",
     "@types/node": "18.15.10",
     "@types/react": "18.2.6",
     "@types/three": "0.146.0",
