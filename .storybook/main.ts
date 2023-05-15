@@ -1,20 +1,15 @@
-import { type StorybookConfig } from "@storybook/core-common";
-
+import { type StorybookConfig } from "@storybook/react-webpack5";
 const config: StorybookConfig = {
   stories: ["../src/**/*.stories.@(js|jsx|ts|tsx)"],
   addons: ["@storybook/addon-essentials"],
-  framework: "@storybook/react",
+  framework: {
+    name: "@storybook/react-webpack5",
+    options: {},
+  },
   typescript: {
     check: true,
-    reactDocgen: false, // https://github.com/storybookjs/storybook/issues/21642
   },
-  core: {
-    builder: "webpack5",
-  },
-  features: {
-    // Tell Storybook to use our own babel config rather than providing a default
-    babelModeV7: true,
-  },
-};
 
+  core: {},
+};
 module.exports = config;
