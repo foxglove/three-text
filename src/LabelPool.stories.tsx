@@ -1,3 +1,4 @@
+import { StoryObj } from "@storybook/react";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -7,6 +8,7 @@ import { Label, LabelPool } from "./LabelPool";
 export default {
   title: "LabelPool",
   component: LabelPool,
+  tags: ["autodocs"],
 };
 
 class StoryScene {
@@ -63,7 +65,8 @@ class StoryScene {
   }
 }
 
-export const Basic = Object.assign(BasicTemplate.bind({}), {
+export const Basic: StoryObj<Parameters<typeof BasicTemplate>[0]> = {
+  render: BasicTemplate,
   args: {
     text: "Hello world!\nExample",
     lineHeight: 1,
@@ -89,7 +92,7 @@ export const Basic = Object.assign(BasicTemplate.bind({}), {
     positionY: { control: { type: "range", min: -5, max: 5, step: 0.01 } },
     positionZ: { control: { type: "range", min: -5, max: 5, step: 0.01 } },
   },
-});
+};
 
 function BasicTemplate({
   text,
