@@ -46,9 +46,11 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
+      # Chromatic only runs on pushes or pulls to our source repo
       - name: Publish to Chromatic
         uses: chromaui/action@v1
+        if: ${{ github.event.repository.full_name == 'foxglove/three-text' }}
         with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          projectToken: de34ab810be0
           autoAcceptChanges: main
           exitOnceUploaded: true
