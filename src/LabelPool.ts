@@ -338,15 +338,15 @@ export class LabelPool extends EventDispatcher<{ type: "scaleFactorChange" | "at
   private availableLabels: Label[] = [];
   private disposed = false;
 
-  static QUAD_POINTS: [number, number][] = [
-    [0, 0],
-    [0, 1],
-    [1, 0],
-    [1, 0],
-    [0, 1],
-    [1, 1],
+  static QUAD_POINTS: [number, number, number][] = [
+    [0, 0, 0],
+    [0, 1, 0],
+    [1, 0, 0],
+    [1, 0, 0],
+    [0, 1, 0],
+    [1, 1, 0],
   ];
-  static QUAD_POSITIONS = new THREE.BufferAttribute(new Float32Array(this.QUAD_POINTS.flat()), 2);
+  static QUAD_POSITIONS = new THREE.BufferAttribute(new Float32Array(this.QUAD_POINTS.flat()), 3);
   static QUAD_UVS = new THREE.BufferAttribute(
     new Float32Array(this.QUAD_POINTS.flatMap(([x, y]) => [x, 1 - y])),
     2,
