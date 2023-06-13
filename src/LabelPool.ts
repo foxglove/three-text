@@ -109,7 +109,7 @@ void main() {
 
   bool insideChar = vInsideChar.x >= 0.0 && vInsideChar.x <= 1.0 && vInsideChar.y >= 0.0 && vInsideChar.y <= 1.0;
   outColor = insideChar ? outColor : vec4(uBackgroundColor, uOpacity);
-  outColor = LinearTosRGB(outColor);
+  outColor = LinearTosRGB(outColor); // assumes output encoding is srgb
 }
 `,
       uniforms: {
@@ -280,16 +280,20 @@ export class Label extends THREE.Object3D {
     this._needsUpdateLayout = false;
   }
 
+  /** Values should be in working (linear-srgb) color space */
   setColor(r: number, g: number, b: number): void {
     this.material.uniforms.uColor!.value[0] = r;
     this.material.uniforms.uColor!.value[1] = g;
     this.material.uniforms.uColor!.value[2] = b;
   }
+
+  /** Values should be in working (linear-srgb) color space */
   setBackgroundColor(r: number, g: number, b: number): void {
     this.material.uniforms.uBackgroundColor!.value[0] = r;
     this.material.uniforms.uBackgroundColor!.value[1] = g;
     this.material.uniforms.uBackgroundColor!.value[2] = b;
   }
+
   setOpacity(opacity: number): void {
     this.material.uniforms.uOpacity!.value = opacity;
     const transparent = opacity < 1;
