@@ -1,15 +1,43 @@
-import { StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import { Label, LabelPool } from "./LabelPool";
 
-export default {
+const meta: Meta<typeof BasicTemplate> = {
   title: "LabelPool",
-  component: LabelPool,
+  component: BasicTemplate,
   tags: ["autodocs"],
+  argTypes: {
+    cameraMode: { control: "inline-radio", options: ["perspective", "orthographic"] },
+    lineHeight: { control: { type: "range", min: 0.5, max: 20, step: 0.01 } },
+    scaleFactor: { control: { type: "range", min: 0, max: 2, step: 0.01 } },
+    opacity: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
+    anchorPointX: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
+    anchorPointY: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
+    positionX: { control: { type: "range", min: -5, max: 5, step: 0.01 } },
+    positionY: { control: { type: "range", min: -5, max: 5, step: 0.01 } },
+    positionZ: { control: { type: "range", min: -5, max: 5, step: 0.01 } },
+  },
+  args: {
+    text: "Hello world!\nExample",
+    lineHeight: 1,
+    scaleFactor: 1,
+    foregroundColor: "#000000",
+    backgroundColor: "#ffffff",
+    opacity: 1,
+    cameraMode: "perspective",
+    billboard: false,
+    sizeAttenuation: true,
+    anchorPointX: 0.5,
+    anchorPointY: 0.5,
+    positionX: 0,
+    positionY: 0,
+    positionZ: 0,
+  },
 };
+export default meta;
 
 class StoryScene {
   labelPool = new LabelPool();
@@ -64,40 +92,12 @@ class StoryScene {
     });
   }
 }
-
-export const Basic: StoryObj<Parameters<typeof BasicTemplate>[0]> = {
-  render: BasicTemplate,
-  args: {
-    text: "Hello world!\nExample",
-    lineHeight: 1,
-    scaleFactor: 1,
-    opacity: 1,
-    cameraMode: "perspective",
-    billboard: false,
-    sizeAttenuation: true,
-    anchorPointX: 0.5,
-    anchorPointY: 0.5,
-    positionX: 0,
-    positionY: 0,
-    positionZ: 0,
-  },
-  argTypes: {
-    cameraMode: { control: "inline-radio", options: ["perspective", "orthographic"] },
-    lineHeight: { control: { type: "range", min: 0.5, max: 20, step: 0.01 } },
-    scaleFactor: { control: { type: "range", min: 0, max: 2, step: 0.01 } },
-    opacity: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
-    anchorPointX: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
-    anchorPointY: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
-    positionX: { control: { type: "range", min: -5, max: 5, step: 0.01 } },
-    positionY: { control: { type: "range", min: -5, max: 5, step: 0.01 } },
-    positionZ: { control: { type: "range", min: -5, max: 5, step: 0.01 } },
-  },
-};
-
 function BasicTemplate({
   text,
   lineHeight,
   scaleFactor,
+  foregroundColor,
+  backgroundColor,
   opacity,
   billboard,
   sizeAttenuation,
@@ -111,6 +111,8 @@ function BasicTemplate({
   text: string;
   lineHeight: number;
   scaleFactor: number;
+  foregroundColor: string;
+  backgroundColor: string;
   opacity: number;
   cameraMode: "perspective" | "orthographic";
   billboard: boolean;
@@ -197,6 +199,22 @@ function BasicTemplate({
 
   useEffect(() => {
     if (label) {
+      const color = new THREE.Color(foregroundColor);
+      label.setColor(color.r, color.g, color.b);
+      storyScene.render();
+    }
+  }, [label, foregroundColor, storyScene]);
+
+  useEffect(() => {
+    if (label) {
+      const color = new THREE.Color(backgroundColor);
+      label.setBackgroundColor(color.r, color.g, color.b);
+      storyScene.render();
+    }
+  }, [label, backgroundColor, storyScene]);
+
+  useEffect(() => {
+    if (label) {
       label.position.set(positionX, positionY, positionZ);
       storyScene.render();
     }
@@ -204,3 +222,11 @@ function BasicTemplate({
 
   return <canvas ref={canvasRef} width={400} height={400} style={{ width: 400, height: 400 }} />;
 }
+
+export const Basic: StoryObj<typeof meta> = {};
+export const CustomColors: StoryObj<typeof meta> = {
+  args: {
+    foregroundColor: "#ff9d42",
+    backgroundColor: "#1295d1",
+  },
+};

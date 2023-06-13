@@ -2,12 +2,18 @@ extends:
   - plugin:@foxglove/base
   - plugin:@foxglove/jest
   - plugin:storybook/recommended
+  - plugin:react/recommended
+  - plugin:react/jsx-runtime
+  - plugin:react-hooks/recommended
 
 env:
   node: true
 
 ignorePatterns:
   - dist
+
+rules:
+  react-hooks/exhaustive-deps: error
 
 overrides:
   - files: ["*.ts", "*.tsx"]
@@ -19,3 +25,7 @@ overrides:
     rules:
       "@typescript-eslint/no-unsafe-assignment": off
       "@typescript-eslint/no-unsafe-member-access": off
+
+  - files: ["*.stories.tsx"]
+    rules:
+      "filenames/match-exported": off
