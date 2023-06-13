@@ -25,7 +25,7 @@ uniform vec2 uAnchorPoint;
 uniform vec2 uCanvasSize;
 
 in vec2 uv;
-in vec2 position;
+in vec3 position;
 in vec2 instanceBoxPosition, instanceCharPosition;
 in vec2 instanceUv;
 in vec2 instanceBoxSize, instanceCharSize;
@@ -37,8 +37,8 @@ void main() {
   vec2 boxUv = (uv * instanceBoxSize - (instanceCharPosition - instanceBoxPosition)) / instanceCharSize;
   vInsideChar = boxUv;
   vUv = (instanceUv + boxUv * instanceCharSize) / uTextureSize;
-  vec2 vertexPos = (instanceBoxPosition + position * instanceBoxSize - uAnchorPoint * uLabelSize) * uScale;
-  vPosInLabel = (instanceBoxPosition + position * instanceBoxSize);
+  vec2 vertexPos = (instanceBoxPosition + position.xy * instanceBoxSize - uAnchorPoint * uLabelSize) * uScale;
+  vPosInLabel = (instanceBoxPosition + position.xy * instanceBoxSize);
 
   // Adapted from THREE.ShaderLib.sprite
   if (uBillboard) {
