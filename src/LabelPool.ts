@@ -10,8 +10,8 @@ export class LabelMaterial extends THREE.RawShaderMaterial {
 
   constructor(params: { atlasTexture?: THREE.Texture; picking?: boolean }) {
     super({
+      glslVersion: THREE.GLSL3,
       vertexShader: /* glsl */ `\
-#version 300 es
 precision highp float;
 precision highp int;
 uniform mat4 projectionMatrix, modelViewMatrix, modelMatrix;
@@ -25,7 +25,7 @@ uniform vec2 uAnchorPoint;
 uniform vec2 uCanvasSize;
 
 in vec2 uv;
-in vec2 position;
+in vec3 position;
 in vec2 instanceBoxPosition, instanceCharPosition;
 in vec2 instanceUv;
 in vec2 instanceBoxSize, instanceCharSize;
@@ -37,8 +37,8 @@ void main() {
   vec2 boxUv = (uv * instanceBoxSize - (instanceCharPosition - instanceBoxPosition)) / instanceCharSize;
   vInsideChar = boxUv;
   vUv = (instanceUv + boxUv * instanceCharSize) / uTextureSize;
-  vec2 vertexPos = (instanceBoxPosition + position * instanceBoxSize - uAnchorPoint * uLabelSize) * uScale;
-  vPosInLabel = (instanceBoxPosition + position * instanceBoxSize);
+  vec2 vertexPos = (instanceBoxPosition + position.xy * instanceBoxSize - uAnchorPoint * uLabelSize) * uScale;
+  vPosInLabel = (instanceBoxPosition + position.xy * instanceBoxSize);
 
   // Adapted from THREE.ShaderLib.sprite
   if (uBillboard) {
@@ -67,7 +67,6 @@ void main() {
       fragmentShader:
         params.picking === true
           ? /* glsl */ `\
-#version 300 es
 #ifdef GL_FRAGMENT_PRECISION_HIGH
   precision highp float;
 #else
@@ -80,7 +79,6 @@ void main() {
 }
 `
           : /* glsl */ `\
-#version 300 es
 #ifdef GL_FRAGMENT_PRECISION_HIGH
   precision highp float;
 #else
@@ -338,15 +336,15 @@ export class LabelPool extends EventDispatcher<{ type: "scaleFactorChange" | "at
   private availableLabels: Label[] = [];
   private disposed = false;
 
-  static QUAD_POINTS: [number, number][] = [
-    [0, 0],
-    [0, 1],
-    [1, 0],
-    [1, 0],
-    [0, 1],
-    [1, 1],
+  static QUAD_POINTS: THREE.Vector3Tuple[] = [
+    [0, 0, 0],
+    [0, 1, 0],
+    [1, 0, 0],
+    [1, 0, 0],
+    [0, 1, 0],
+    [1, 1, 0],
   ];
-  static QUAD_POSITIONS = new THREE.BufferAttribute(new Float32Array(this.QUAD_POINTS.flat()), 2);
+  static QUAD_POSITIONS = new THREE.BufferAttribute(new Float32Array(this.QUAD_POINTS.flat()), 3);
   static QUAD_UVS = new THREE.BufferAttribute(
     new Float32Array(this.QUAD_POINTS.flatMap(([x, y]) => [x, 1 - y])),
     2,
@@ -395,7 +393,6 @@ export class LabelPool extends EventDispatcher<{ type: "scaleFactorChange" | "at
     }
 
     this.atlasTexture.image = {
-      colorSpace: "srgb",
       data,
       width: this.fontManager.atlasData.width,
       height: this.fontManager.atlasData.height,
