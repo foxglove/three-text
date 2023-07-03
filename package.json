@@ -37,7 +37,7 @@
   "devDependencies": {
     "@foxglove/eslint-plugin": "0.22.1",
     "@foxglove/tsconfig": "2.0.0",
-    "@storybook/addon-essentials": "7.0.20",
+    "@storybook/addon-essentials": "7.0.24",
     "@storybook/react": "7.0.20",
     "@storybook/react-webpack5": "7.0.20",
     "@types/jest": "29.5.2",
