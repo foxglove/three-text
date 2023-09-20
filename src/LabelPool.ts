@@ -103,11 +103,11 @@ float aastep(float threshold, float value) {
 
 void main() {
   float dist = texture(uMap, vUv).a;
-  vec4 color = vec4(uBackgroundColor * (1.0 - dist) + uColor * dist);
-  outColor = vec4(mix(uBackgroundColor, uColor, aastep(0.75, dist)));
+  vec4 color = uBackgroundColor * (1.0 - dist) + uColor * dist;
+  outColor = mix(uBackgroundColor, uColor, aastep(0.75, dist));
 
   bool insideChar = vInsideChar.x >= 0.0 && vInsideChar.x <= 1.0 && vInsideChar.y >= 0.0 && vInsideChar.y <= 1.0;
-  outColor = insideChar ? outColor : vec4(uBackgroundColor);
+  outColor = insideChar ? outColor : uBackgroundColor;
   outColor = LinearTosRGB(outColor); // assumes output encoding is srgb
 }
 `,
@@ -278,25 +278,21 @@ export class Label extends THREE.Object3D {
   }
 
   /** Values should be in working (linear-srgb) color space */
-  setColor(r: number, g: number, b: number, a?: number): void {
+  setColor(r: number, g: number, b: number, a = 1): void {
     this.material.uniforms.uColor!.value[0] = r;
     this.material.uniforms.uColor!.value[1] = g;
     this.material.uniforms.uColor!.value[2] = b;
-    if (a != undefined) {
-      this.material.uniforms.uColor!.value[3] = a;
-      this.#updateTransparency();
-    }
+    this.material.uniforms.uColor!.value[3] = a;
+    this.#updateTransparency();
   }
 
   /** Values should be in working (linear-srgb) color space */
-  setBackgroundColor(r: number, g: number, b: number, a?: number): void {
+  setBackgroundColor(r: number, g: number, b: number, a = 1): void {
     this.material.uniforms.uBackgroundColor!.value[0] = r;
     this.material.uniforms.uBackgroundColor!.value[1] = g;
     this.material.uniforms.uBackgroundColor!.value[2] = b;
-    if (a != undefined) {
-      this.material.uniforms.uBackgroundColor!.value[3] = a;
-      this.#updateTransparency();
-    }
+    this.material.uniforms.uBackgroundColor!.value[3] = a;
+    this.#updateTransparency();
   }
 
   #updateTransparency(): void {

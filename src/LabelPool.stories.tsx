@@ -52,10 +52,18 @@ class StoryScene {
 
   perspective = true;
 
+  bgCube?: THREE.Mesh;
+
   constructor() {
     this.perspectiveCamera.position.set(4, 4, 4);
     this.scene.background = new THREE.Color(0xf0f0f0);
     this.scene.add(new THREE.AxesHelper(5));
+    // show transparency in snapshot tests
+    const cubeGeometry = new THREE.BoxGeometry(0.2, 0.2, 2);
+    const cubeMaterial = new THREE.MeshNormalMaterial();
+    this.bgCube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    this.bgCube.position.set(0, 0, -0.8);
+    this.scene.add(this.bgCube);
   }
 
   dispose() {
@@ -141,11 +149,6 @@ function BasicTemplate({
     setLabel(newLabel);
 
     storyScene.scene.add(newLabel);
-    const defaultLabel = storyScene.labelPool.acquire();
-    // test transparency
-    defaultLabel.setText("Default");
-    defaultLabel.position.set(0, 0, -1);
-    storyScene.scene.add(defaultLabel);
 
     storyScene.render();
 
@@ -231,5 +234,7 @@ export const CustomColors: StoryObj<typeof meta> = {
   args: {
     foregroundColor: "#ff9d42",
     backgroundColor: "#1295d1",
+    bgOpacity: 0.5,
+    fgOpacity: 0.2,
   },
 };
