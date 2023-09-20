@@ -13,7 +13,8 @@ const meta: Meta<typeof BasicTemplate> = {
     cameraMode: { control: "inline-radio", options: ["perspective", "orthographic"] },
     lineHeight: { control: { type: "range", min: 0.5, max: 20, step: 0.01 } },
     scaleFactor: { control: { type: "range", min: 0, max: 2, step: 0.01 } },
-    opacity: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
+    bgOpacity: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
+    fgOpacity: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
     anchorPointX: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
     anchorPointY: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
     positionX: { control: { type: "range", min: -5, max: 5, step: 0.01 } },
@@ -26,7 +27,8 @@ const meta: Meta<typeof BasicTemplate> = {
     scaleFactor: 1,
     foregroundColor: "#000000",
     backgroundColor: "#ffffff",
-    opacity: 1,
+    fgOpacity: 1,
+    bgOpacity: 1,
     cameraMode: "perspective",
     billboard: false,
     sizeAttenuation: true,
@@ -98,7 +100,8 @@ function BasicTemplate({
   scaleFactor,
   foregroundColor,
   backgroundColor,
-  opacity,
+  fgOpacity,
+  bgOpacity,
   billboard,
   sizeAttenuation,
   cameraMode = "perspective",
@@ -113,7 +116,8 @@ function BasicTemplate({
   scaleFactor: number;
   foregroundColor: string;
   backgroundColor: string;
-  opacity: number;
+  fgOpacity: number;
+  bgOpacity: number;
   cameraMode: "perspective" | "orthographic";
   billboard: boolean;
   sizeAttenuation: boolean;
@@ -137,6 +141,12 @@ function BasicTemplate({
     setLabel(newLabel);
 
     storyScene.scene.add(newLabel);
+    const defaultLabel = storyScene.labelPool.acquire();
+    // test transparency
+    defaultLabel.setText("Default");
+    defaultLabel.position.set(0, 0, -1);
+    storyScene.scene.add(defaultLabel);
+
     storyScene.render();
 
     return () => {
@@ -171,13 +181,6 @@ function BasicTemplate({
 
   useEffect(() => {
     if (label) {
-      label.setOpacity(opacity);
-      storyScene.render();
-    }
-  }, [opacity, label, storyScene]);
-
-  useEffect(() => {
-    if (label) {
       label.setBillboard(billboard);
       storyScene.render();
     }
@@ -200,18 +203,18 @@ function BasicTemplate({
   useEffect(() => {
     if (label) {
       const color = new THREE.Color(foregroundColor);
-      label.setColor(color.r, color.g, color.b);
+      label.setColor(color.r, color.g, color.b, fgOpacity);
       storyScene.render();
     }
-  }, [label, foregroundColor, storyScene]);
+  }, [label, foregroundColor, storyScene, fgOpacity]);
 
   useEffect(() => {
     if (label) {
       const color = new THREE.Color(backgroundColor);
-      label.setBackgroundColor(color.r, color.g, color.b);
+      label.setBackgroundColor(color.r, color.g, color.b, bgOpacity);
       storyScene.render();
     }
-  }, [label, backgroundColor, storyScene]);
+  }, [label, backgroundColor, storyScene, bgOpacity]);
 
   useEffect(() => {
     if (label) {
