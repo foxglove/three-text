@@ -234,7 +234,7 @@ export const CustomColors: StoryObj<typeof meta> = {
   args: {
     foregroundColor: "#ff9d42",
     backgroundColor: "#1295d1",
-    bgOpacity: 0.5,
-    fgOpacity: 0.2,
+    bgOpacity: 0.8,
+    fgOpacity: 0.3,
   },
 };
