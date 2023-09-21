@@ -85,8 +85,7 @@ void main() {
   precision mediump float;
 #endif
 uniform sampler2D uMap;
-uniform float uOpacity;
-uniform mediump vec3 uColor, uBackgroundColor;
+uniform mediump vec4 uColor, uBackgroundColor;
 uniform float uScale;
 uniform vec2 uLabelSize;
 in mediump vec2 vUv;
@@ -104,11 +103,11 @@ float aastep(float threshold, float value) {
 
 void main() {
   float dist = texture(uMap, vUv).a;
-  vec4 color = vec4(uBackgroundColor.rgb * (1.0 - dist) + uColor * dist, uOpacity);
-  outColor = vec4(mix(uBackgroundColor, uColor, aastep(0.75, dist)), uOpacity);
+  vec4 color = uBackgroundColor * (1.0 - dist) + uColor * dist;
+  outColor = mix(uBackgroundColor, uColor, aastep(0.75, dist));
 
   bool insideChar = vInsideChar.x >= 0.0 && vInsideChar.x <= 1.0 && vInsideChar.y >= 0.0 && vInsideChar.y <= 1.0;
-  outColor = insideChar ? outColor : vec4(uBackgroundColor, uOpacity);
+  outColor = insideChar ? outColor : uBackgroundColor;
   outColor = LinearTosRGB(outColor); // assumes output encoding is srgb
 }
 `,
@@ -124,9 +123,8 @@ void main() {
           value: [params.atlasTexture?.image.width ?? 0, params.atlasTexture?.image.height ?? 0],
         },
         uMap: { value: params.atlasTexture },
-        uOpacity: { value: 1 },
-        uColor: { value: [0, 0, 0] },
-        uBackgroundColor: { value: [1, 1, 1] },
+        uColor: { value: [0, 0, 0, 1] },
+        uBackgroundColor: { value: [1, 1, 1, 1] },
       },
 
       side: THREE.DoubleSide,
@@ -192,7 +190,6 @@ export class Label extends THREE.Object3D {
     };
 
     this.add(this.mesh);
-    this.setOpacity(1);
 
     labelPool.addEventListener("scaleFactorChange", () => {
       // Trigger recalculation of scale uniform
@@ -281,22 +278,27 @@ export class Label extends THREE.Object3D {
   }
 
   /** Values should be in working (linear-srgb) color space */
-  setColor(r: number, g: number, b: number): void {
+  setColor(r: number, g: number, b: number, a = 1): void {
     this.material.uniforms.uColor!.value[0] = r;
     this.material.uniforms.uColor!.value[1] = g;
     this.material.uniforms.uColor!.value[2] = b;
+    this.material.uniforms.uColor!.value[3] = a;
+    this.#updateTransparency();
   }
 
   /** Values should be in working (linear-srgb) color space */
-  setBackgroundColor(r: number, g: number, b: number): void {
+  setBackgroundColor(r: number, g: number, b: number, a = 1): void {
     this.material.uniforms.uBackgroundColor!.value[0] = r;
     this.material.uniforms.uBackgroundColor!.value[1] = g;
     this.material.uniforms.uBackgroundColor!.value[2] = b;
+    this.material.uniforms.uBackgroundColor!.value[3] = a;
+    this.#updateTransparency();
   }
 
-  setOpacity(opacity: number): void {
-    this.material.uniforms.uOpacity!.value = opacity;
-    const transparent = opacity < 1;
+  #updateTransparency(): void {
+    const bgOpacity = this.material.uniforms.uBackgroundColor!.value[3];
+    const fgOpacity = this.material.uniforms.uColor!.value[3];
+    const transparent = bgOpacity < 1 || fgOpacity < 1;
     this.material.transparent = transparent;
     this.material.depthWrite = !transparent;
   }
