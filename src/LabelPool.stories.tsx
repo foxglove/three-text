@@ -13,7 +13,8 @@ const meta: Meta<typeof BasicTemplate> = {
     cameraMode: { control: "inline-radio", options: ["perspective", "orthographic"] },
     lineHeight: { control: { type: "range", min: 0.5, max: 20, step: 0.01 } },
     scaleFactor: { control: { type: "range", min: 0, max: 2, step: 0.01 } },
-    opacity: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
+    bgOpacity: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
+    fgOpacity: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
     anchorPointX: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
     anchorPointY: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
     positionX: { control: { type: "range", min: -5, max: 5, step: 0.01 } },
@@ -26,7 +27,8 @@ const meta: Meta<typeof BasicTemplate> = {
     scaleFactor: 1,
     foregroundColor: "#000000",
     backgroundColor: "#ffffff",
-    opacity: 1,
+    fgOpacity: 1,
+    bgOpacity: 1,
     cameraMode: "perspective",
     billboard: false,
     sizeAttenuation: true,
@@ -50,10 +52,18 @@ class StoryScene {
 
   perspective = true;
 
+  bgCube?: THREE.Mesh;
+
   constructor() {
     this.perspectiveCamera.position.set(4, 4, 4);
     this.scene.background = new THREE.Color(0xf0f0f0);
     this.scene.add(new THREE.AxesHelper(5));
+    // show transparency in snapshot tests
+    const cubeGeometry = new THREE.BoxGeometry(0.2, 0.2, 2);
+    const cubeMaterial = new THREE.MeshNormalMaterial();
+    this.bgCube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    this.bgCube.position.set(0, 0, -0.8);
+    this.scene.add(this.bgCube);
   }
 
   dispose() {
@@ -98,7 +108,8 @@ function BasicTemplate({
   scaleFactor,
   foregroundColor,
   backgroundColor,
-  opacity,
+  fgOpacity,
+  bgOpacity,
   billboard,
   sizeAttenuation,
   cameraMode = "perspective",
@@ -113,7 +124,8 @@ function BasicTemplate({
   scaleFactor: number;
   foregroundColor: string;
   backgroundColor: string;
-  opacity: number;
+  fgOpacity: number;
+  bgOpacity: number;
   cameraMode: "perspective" | "orthographic";
   billboard: boolean;
   sizeAttenuation: boolean;
@@ -137,6 +149,7 @@ function BasicTemplate({
     setLabel(newLabel);
 
     storyScene.scene.add(newLabel);
+
     storyScene.render();
 
     return () => {
@@ -171,13 +184,6 @@ function BasicTemplate({
 
   useEffect(() => {
     if (label) {
-      label.setOpacity(opacity);
-      storyScene.render();
-    }
-  }, [opacity, label, storyScene]);
-
-  useEffect(() => {
-    if (label) {
       label.setBillboard(billboard);
       storyScene.render();
     }
@@ -200,18 +206,18 @@ function BasicTemplate({
   useEffect(() => {
     if (label) {
       const color = new THREE.Color(foregroundColor);
-      label.setColor(color.r, color.g, color.b);
+      label.setColor(color.r, color.g, color.b, fgOpacity);
       storyScene.render();
     }
-  }, [label, foregroundColor, storyScene]);
+  }, [label, foregroundColor, storyScene, fgOpacity]);
 
   useEffect(() => {
     if (label) {
       const color = new THREE.Color(backgroundColor);
-      label.setBackgroundColor(color.r, color.g, color.b);
+      label.setBackgroundColor(color.r, color.g, color.b, bgOpacity);
       storyScene.render();
     }
-  }, [label, backgroundColor, storyScene]);
+  }, [label, backgroundColor, storyScene, bgOpacity]);
 
   useEffect(() => {
     if (label) {
@@ -228,5 +234,7 @@ export const CustomColors: StoryObj<typeof meta> = {
   args: {
     foregroundColor: "#ff9d42",
     backgroundColor: "#1295d1",
+    bgOpacity: 0.8,
+    fgOpacity: 0.3,
   },
 };
