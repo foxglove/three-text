@@ -45,7 +45,7 @@ export type FontManagerOptions = {
  * Manages the creation of a Signed Distance Field (SDF) font atlas, and performs text layout to
  * generate attributes for rendering text using the atlas.
  */
-export class FontManager extends EventDispatcher<{ type: "atlasChange" }> {
+export class FontManager extends EventDispatcher<{ atlasChange: object }> {
   private alphabet = "";
   atlasData: AtlasData = {
     data: new Uint8ClampedArray(),
