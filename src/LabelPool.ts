@@ -141,6 +141,22 @@ void main() {
   }
 }
 
+/**
+ * Since THREE.js r151, InstancedMesh supports bounding sphere calculations using instanceMatrix.
+ * However, Label does not use instanceMatrix and the resulting bounding spheres are have NaN
+ * values. Instead, fall back to using the (non-instanced) bounding sphere of the geometry, which at
+ * least provides a semi-correct value based on the label's `position`.
+ */
+class InstancedMeshWithBasicBoundingSphere extends THREE.InstancedMesh {
+  override computeBoundingSphere(): void {
+    this.geometry.computeBoundingSphere();
+    const boundingSphere = this.geometry.boundingSphere;
+    if (boundingSphere) {
+      (this.boundingSphere ??= new THREE.Sphere()).copy(boundingSphere);
+    }
+  }
+}
+
 export class Label extends THREE.Object3D {
   text = "";
   mesh: THREE.InstancedMesh;
@@ -183,7 +199,7 @@ export class Label extends THREE.Object3D {
     this.material = new LabelMaterial({ atlasTexture: labelPool.atlasTexture });
     this.pickingMaterial = new LabelMaterial({ picking: true });
 
-    this.mesh = new THREE.InstancedMesh(this.geometry, this.material, 0);
+    this.mesh = new InstancedMeshWithBasicBoundingSphere(this.geometry, this.material, 0);
     this.mesh.userData.pickingMaterial = this.pickingMaterial;
 
     this.mesh.onBeforeRender = (renderer, _scene, _camera, _geometry, _material, _group) => {
