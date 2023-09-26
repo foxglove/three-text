@@ -93,7 +93,12 @@ in mediump vec2 vPosInLabel;
 in mediump vec2 vInsideChar;
 out vec4 outColor;
 
-${THREE.ShaderChunk.encodings_pars_fragment /* for LinearTosRGB() */}
+${
+  // for LinearTosRGB()
+  THREE.ShaderChunk.colorspace_pars_fragment ??
+  // for backward compatibility with three@<154
+  (THREE.ShaderChunk as Record<string, string>).encodings_pars_fragment
+}
 
 // From https://github.com/Jam3/three-bmfont-text/blob/e17efbe4e9392a83d4c5ee35c67eca5a11a13395/shaders/sdf.js
 float aastep(float threshold, float value) {
@@ -336,7 +341,7 @@ export class Label extends THREE.Object3D {
   }
 }
 
-export class LabelPool extends EventDispatcher<{ type: "scaleFactorChange" | "atlasChange" }> {
+export class LabelPool extends EventDispatcher<{ scaleFactorChange: object; atlasChange: object }> {
   atlasTexture: THREE.DataTexture;
 
   private availableLabels: Label[] = [];
