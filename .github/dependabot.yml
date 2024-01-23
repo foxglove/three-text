@@ -7,3 +7,29 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
+    labels: [] # disable default labels
+
+    # Define groups of dependencies to be updated together
+    # https://github.blog/changelog/2023-06-30-grouped-version-updates-for-dependabot-public-beta/
+    groups:
+      storybook:
+        patterns:
+          - "storybook"
+          - "@storybook/*"
+      eslint:
+        patterns:
+          - "@typescript-eslint/*"
+      jest:
+        patterns:
+          - "jest"
+          - "jest-*"
+          - "babel-jest"
+          - "@types/jest"
+      webpack:
+        patterns:
+          - "webpack"
+          - "webpack-cli"
+          - "webpack-dev-server"
+      babel:
+        patterns:
+          - "@babel/*"
