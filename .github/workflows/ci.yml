@@ -11,15 +11,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v2
+      - run: corepack enable
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: 20.x
           registry-url: https://registry.npmjs.org
           cache: yarn
 
-      - run: yarn install --frozen-lockfile
+      - run: yarn install --immutable
 
       - run: yarn run build
       - run: yarn run lint:ci
@@ -34,17 +35,18 @@ jobs:
   chromatic:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Required for Chromatic
 
-      - uses: actions/setup-node@v2
+      - run: corepack enable
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: 20.x
           registry-url: https://registry.npmjs.org
           cache: yarn
 
-      - run: yarn install --frozen-lockfile
+      - run: yarn install --immutable
 
       # Chromatic only runs on pushes or pulls to our source repo
       - name: Publish to Chromatic
