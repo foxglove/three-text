@@ -95,7 +95,7 @@ out vec4 outColor;
 
 ${
   // for LinearTosRGB()
-  THREE.ShaderChunk.colorspace_pars_fragment ??
+  (THREE.ShaderChunk.colorspace_pars_fragment as string | undefined) ??
   // for backward compatibility with three@<154
   (THREE.ShaderChunk as Record<string, string>).encodings_pars_fragment
 }

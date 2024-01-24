@@ -25,6 +25,7 @@ overrides:
     rules:
       "@typescript-eslint/no-unsafe-assignment": off
       "@typescript-eslint/no-unsafe-member-access": off
+      "@foxglove/prefer-hash-private": off
 
   - files: ["*.stories.tsx"]
     rules:
