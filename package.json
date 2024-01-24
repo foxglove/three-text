@@ -67,7 +67,5 @@
     "ts-jest": "29.1.0",
     "typescript": "5.3.3"
   },
-  "resolutions": {
-    "strip-ansi": "^6.0.1"
-  }
+  "packageManager": "yarn@4.0.2"
 }
