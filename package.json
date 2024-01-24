@@ -63,7 +63,7 @@
     "react-dom": "18.2.0",
     "rimraf": "5.0.5",
     "storybook": "7.6.10",
-    "three": "0.156.1",
+    "three": "0.160.1",
     "ts-jest": "29.1.2",
     "typescript": "5.3.3"
   },
