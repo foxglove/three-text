@@ -6,4 +6,10 @@ export const parameters = {
       date: /Date$/,
     },
   },
+  chromatic: {
+    // Detect any visual differences, no matter how small
+    // https://www.chromatic.com/docs/threshold
+    diffThreshold: 0,
+    diffIncludeAntiAliasing: true,
+  },
 };
