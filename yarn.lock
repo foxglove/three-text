@@ -1843,7 +1843,7 @@ __metadata:
     "@types/three": "npm:0.156.0"
     "@typescript-eslint/eslint-plugin": "npm:6.19.1"
     "@typescript-eslint/parser": "npm:6.19.1"
-    chromatic: "npm:10.5.0"
+    chromatic: "npm:10.7.1"
     eslint: "npm:8.56.0"
     eslint-config-prettier: "npm:9.1.0"
     eslint-plugin-es: "npm:4.1.0"
@@ -5636,22 +5636,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chromatic@npm:10.5.0":
-  version: 10.5.0
-  resolution: "chromatic@npm:10.5.0"
+"chromatic@npm:10.7.1":
+  version: 10.7.1
+  resolution: "chromatic@npm:10.7.1"
   peerDependencies:
-    chromatic-cypress: ^0.4.0 || ^1.0.0
-    chromatic-playwright: ^0.4.0 || ^1.0.0
+    "@chromatic-com/cypress": ^0.5.2 || ^1.0.0
+    "@chromatic-com/playwright": ^0.5.2 || ^1.0.0
   peerDependenciesMeta:
-    chromatic-cypress:
+    "@chromatic-com/cypress":
       optional: true
-    chromatic-playwright:
+    "@chromatic-com/playwright":
       optional: true
   bin:
     chroma: dist/bin.js
     chromatic: dist/bin.js
     chromatic-cli: dist/bin.js
-  checksum: 8ccaafb5e976af01cf55bc66649ba5d7be42bc2ae257a8840722c48a637596d0b835af091c72597eac5d9be234aacfbb535388899ffebf8a66a94913df73372e
+  checksum: 5beaaf3f461e0edbedcf8f987928bd049481203de5c7c659db0160efda8c8fd0994e1454e97d88c496dc016421159c6260ed469e1e07ff5a7685de2e9e8128a6
   languageName: node
   linkType: hard
 
