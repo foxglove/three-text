@@ -1840,7 +1840,7 @@ __metadata:
     "@types/jest": "npm:29.5.11"
     "@types/node": "npm:20.11.6"
     "@types/react": "npm:18.2.48"
-    "@types/three": "npm:0.156.0"
+    "@types/three": "npm:0.160.0"
     "@typescript-eslint/eslint-plugin": "npm:6.19.1"
     "@typescript-eslint/parser": "npm:6.19.1"
     chromatic: "npm:10.9.3"
@@ -4297,15 +4297,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/three@npm:0.156.0":
-  version: 0.156.0
-  resolution: "@types/three@npm:0.156.0"
+"@types/three@npm:0.160.0":
+  version: 0.160.0
+  resolution: "@types/three@npm:0.160.0"
   dependencies:
     "@types/stats.js": "npm:*"
     "@types/webxr": "npm:*"
     fflate: "npm:~0.6.10"
     meshoptimizer: "npm:~0.18.1"
-  checksum: a1b3f6ede6022dd8d2599b09a1f7af6fd09704ebfbf17023e6e17c246c5f68ae972167c85f202eaa2e16da7dc3dee07e1c304476e302273b072f43cc6df322ff
+  checksum: a2b98a2f2b718851850e09a66553249398a4e6ddf1dd46bbb0a7721a8656f2a38aad4e5a0ef26723f07bdc7c2cd277558e525296d4e482714c5ed100fc7e752a
   languageName: node
   linkType: hard
 
