@@ -8,10 +8,13 @@ const tempVec2 = new THREE.Vector2();
 export class LabelMaterial extends THREE.RawShaderMaterial {
   picking: boolean;
 
-  constructor(params: { atlasTexture?: THREE.Texture; picking?: boolean }) {
+  constructor(params: { atlasTexture?: THREE.Texture; picking?: boolean; logarithmicDepthBuffer?: boolean }) {
     super({
       glslVersion: THREE.GLSL3,
       vertexShader: /* glsl */ `\
+#include <common>
+#include <logdepthbuf_pars_vertex>
+
 precision highp float;
 precision highp int;
 uniform mat4 projectionMatrix, modelViewMatrix, modelMatrix;
@@ -62,11 +65,14 @@ void main() {
   } else {
     gl_Position = projectionMatrix * modelViewMatrix * vec4(vertexPos, 0.0, 1.0);
   }
+  #include <logdepthbuf_vertex>
 }
 `,
       fragmentShader:
         params.picking === true
           ? /* glsl */ `\
+#include <logdepthbuf_pars_fragment>
+
 #ifdef GL_FRAGMENT_PRECISION_HIGH
   precision highp float;
 #else
@@ -76,9 +82,11 @@ uniform vec4 objectId;
 out vec4 outColor;
 void main() {
   outColor = objectId;
+  #include <logdepthbuf_fragment>
 }
 `
           : /* glsl */ `\
+#include <logdepthbuf_pars_fragment>
 #ifdef GL_FRAGMENT_PRECISION_HIGH
   precision highp float;
 #else
@@ -114,6 +122,7 @@ void main() {
   bool insideChar = vInsideChar.x >= 0.0 && vInsideChar.x <= 1.0 && vInsideChar.y >= 0.0 && vInsideChar.y <= 1.0;
   outColor = insideChar ? outColor : uBackgroundColor;
   outColor = LinearTosRGB(outColor); // assumes output encoding is srgb
+  #include <logdepthbuf_fragment>
 }
 `,
       uniforms: {
@@ -131,7 +140,7 @@ void main() {
         uColor: { value: [0, 0, 0, 1] },
         uBackgroundColor: { value: [1, 1, 1, 1] },
       },
-
+      defines: (params.logarithmicDepthBuffer ?? false) ?  {USE_LOGDEPTHBUF: "" } : {},
       side: THREE.DoubleSide,
       transparent: false,
       depthWrite: true,
@@ -196,8 +205,10 @@ export class Label extends THREE.Object3D {
     this.geometry.setAttribute("instanceBoxSize", this.instanceBoxSize);
     this.geometry.setAttribute("instanceCharSize", this.instanceCharSize);
 
-    this.material = new LabelMaterial({ atlasTexture: labelPool.atlasTexture });
-    this.pickingMaterial = new LabelMaterial({ picking: true });
+    this.material = new LabelMaterial({ atlasTexture: labelPool.atlasTexture,
+					logarithmicDepthBuffer: labelPool.logarithmicDepthBuffer});
+    this.pickingMaterial = new LabelMaterial({ picking: true,
+					       logarithmicDepthBuffer: labelPool.logarithmicDepthBuffer});
 
     this.mesh = new InstancedMeshWithBasicBoundingSphere(this.geometry, this.material, 0);
     this.mesh.userData.pickingMaterial = this.pickingMaterial;
@@ -379,7 +390,8 @@ export class LabelPool extends EventDispatcher<{ scaleFactorChange: object; atla
 
   fontManager: FontManager;
   scaleFactor = 1;
-
+  logarithmicDepthBuffer = false;
+    
   setScaleFactor(scaleFactor: number): void {
     this.scaleFactor = scaleFactor;
     this.dispatchEvent({ type: "scaleFactorChange" });
