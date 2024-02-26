@@ -8,7 +8,11 @@ const tempVec2 = new THREE.Vector2();
 export class LabelMaterial extends THREE.RawShaderMaterial {
   picking: boolean;
 
-  constructor(params: { atlasTexture?: THREE.Texture; picking?: boolean; logarithmicDepthBuffer?: boolean }) {
+  constructor(params: {
+    atlasTexture?: THREE.Texture;
+    picking?: boolean;
+    logarithmicDepthBuffer?: boolean;
+  }) {
     super({
       glslVersion: THREE.GLSL3,
       vertexShader: /* glsl */ `\
@@ -140,7 +144,7 @@ void main() {
         uColor: { value: [0, 0, 0, 1] },
         uBackgroundColor: { value: [1, 1, 1, 1] },
       },
-      defines: (params.logarithmicDepthBuffer ?? false) ?  {USE_LOGDEPTHBUF: "" } : {},
+      defines: params.logarithmicDepthBuffer ?? false ? { USE_LOGDEPTHBUF: "" } : {},
       side: THREE.DoubleSide,
       transparent: false,
       depthWrite: true,
@@ -205,10 +209,14 @@ export class Label extends THREE.Object3D {
     this.geometry.setAttribute("instanceBoxSize", this.instanceBoxSize);
     this.geometry.setAttribute("instanceCharSize", this.instanceCharSize);
 
-    this.material = new LabelMaterial({ atlasTexture: labelPool.atlasTexture,
-					logarithmicDepthBuffer: labelPool.logarithmicDepthBuffer});
-    this.pickingMaterial = new LabelMaterial({ picking: true,
-					       logarithmicDepthBuffer: labelPool.logarithmicDepthBuffer});
+    this.material = new LabelMaterial({
+      atlasTexture: labelPool.atlasTexture,
+      logarithmicDepthBuffer: labelPool.logarithmicDepthBuffer,
+    });
+    this.pickingMaterial = new LabelMaterial({
+      picking: true,
+      logarithmicDepthBuffer: labelPool.logarithmicDepthBuffer,
+    });
 
     this.mesh = new InstancedMeshWithBasicBoundingSphere(this.geometry, this.material, 0);
     this.mesh.userData.pickingMaterial = this.pickingMaterial;
@@ -391,7 +399,7 @@ export class LabelPool extends EventDispatcher<{ scaleFactorChange: object; atla
   fontManager: FontManager;
   scaleFactor = 1;
   logarithmicDepthBuffer = false;
-    
+
   setScaleFactor(scaleFactor: number): void {
     this.scaleFactor = scaleFactor;
     this.dispatchEvent({ type: "scaleFactorChange" });
