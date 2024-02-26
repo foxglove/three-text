@@ -46,7 +46,7 @@
     "@types/three": "0.160.0",
     "@typescript-eslint/eslint-plugin": "7.0.2",
     "@typescript-eslint/parser": "7.0.2",
-    "chromatic": "10.9.3",
+    "chromatic": "11.0.0",
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-es": "4.1.0",
