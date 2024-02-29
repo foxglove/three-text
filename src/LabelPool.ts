@@ -7,6 +7,7 @@ const tempVec2 = new THREE.Vector2();
 
 export class LabelMaterial extends THREE.RawShaderMaterial {
   picking: boolean;
+  logarithmicDepthBuffer: boolean;
 
   constructor(params: { atlasTexture?: THREE.Texture; picking?: boolean }) {
     super({
@@ -147,12 +148,19 @@ void main() {
     });
 
     this.picking = params.picking ?? false;
+    this.logarithmicDepthBuffer = false;
 
     this.onBeforeCompile = (_, renderer) => {
-      if (renderer.capabilities.logarithmicDepthBuffer) {
-        this.material.defines = { USE_LOGDEPTHBUF: "" };
-      } else {
-        this.material.defines = {};
+      const new_depth_buffer_val: boolean = renderer.capabilities.logarithmicDepthBuffer;
+      if (new_depth_buffer_val !== this.logarithmicDepthBuffer) {
+        this.logarithmicDepthBuffer = new_depth_buffer_val;
+        if (this.logarithmicDepthBuffer) {
+          this.defines = { USE_LOGDEPTHBUF: "" };
+        } else {
+          this.defines = {};
+        }
+        // Ensure that we acquire the right shader program before rendering.
+        this.needsUpdate = true;
       }
     };
   }
