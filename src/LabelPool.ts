@@ -13,9 +13,7 @@ export class LabelMaterial extends THREE.RawShaderMaterial {
       glslVersion: THREE.GLSL3,
       vertexShader: /* glsl */ `\
 #include <common>
-
-uniform bool uLogDepth;
-uniform float logDepthBufFC;
+#include <logdepthbuf_pars_vertex>
 
 precision highp float;
 precision highp int;
@@ -67,15 +65,14 @@ void main() {
   } else {
     gl_Position = projectionMatrix * modelViewMatrix * vec4(vertexPos, 0.0, 1.0);
   }
-  if (uLogDepth && isPerspectiveMatrix( projectionMatrix ) ) {
-    gl_Position.z = log2( max( EPSILON, gl_Position.w + 1.0 ) ) * logDepthBufFC - 1.0;
-    gl_Position.z *= gl_Position.w;
-  }
+  #include <logdepthbuf_vertex>
 }
 `,
       fragmentShader:
         params.picking === true
           ? /* glsl */ `\
+#include <logdepthbuf_pars_fragment>
+
 #ifdef GL_FRAGMENT_PRECISION_HIGH
   precision highp float;
 #else
@@ -85,9 +82,11 @@ uniform vec4 objectId;
 out vec4 outColor;
 void main() {
   outColor = objectId;
+  #include <logdepthbuf_fragment>
 }
 `
           : /* glsl */ `\
+#include <logdepthbuf_pars_fragment>
 #ifdef GL_FRAGMENT_PRECISION_HIGH
   precision highp float;
 #else
@@ -123,13 +122,13 @@ void main() {
   bool insideChar = vInsideChar.x >= 0.0 && vInsideChar.x <= 1.0 && vInsideChar.y >= 0.0 && vInsideChar.y <= 1.0;
   outColor = insideChar ? outColor : uBackgroundColor;
   outColor = LinearTosRGB(outColor); // assumes output encoding is srgb
+  #include <logdepthbuf_fragment>
 }
 `,
       uniforms: {
         objectId: { value: [NaN, NaN, NaN, NaN] },
         uAnchorPoint: { value: [0.5, 0.5] },
         uBillboard: { value: false },
-        uLogDepth: { value: false },
         uSizeAttenuation: { value: true },
         uLabelSize: { value: [0, 0] },
         uCanvasSize: { value: [0, 0] },
@@ -141,12 +140,21 @@ void main() {
         uColor: { value: [0, 0, 0, 1] },
         uBackgroundColor: { value: [1, 1, 1, 1] },
       },
+
       side: THREE.DoubleSide,
       transparent: false,
       depthWrite: true,
     });
 
     this.picking = params.picking ?? false;
+
+    this.onBeforeCompile = (_, renderer) => {
+      if (renderer.capabilities.logarithmicDepthBuffer) {
+        this.material.defines = { USE_LOGDEPTHBUF: "" };
+      } else {
+        this.material.defines = {};
+      }
+    };
   }
 }
 
@@ -217,9 +225,6 @@ export class Label extends THREE.Object3D {
       this.material.uniforms.uCanvasSize!.value[1] = tempVec2.y;
       this.pickingMaterial.uniforms.uCanvasSize!.value[0] = tempVec2.x;
       this.pickingMaterial.uniforms.uCanvasSize!.value[1] = tempVec2.y;
-
-      this.material.uniforms.uLogDepth!.value = renderer.capabilities.logarithmicDepthBuffer;
-      this.pickingMaterial.uniforms.uLogDepth!.value = renderer.capabilities.logarithmicDepthBuffer;
     };
 
     this.add(this.mesh);
