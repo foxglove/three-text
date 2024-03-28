@@ -54,7 +54,7 @@ class StoryScene {
 
   bgCube?: THREE.Mesh;
 
-  constructor() {
+  constructor(private options: { logDepthBuffer: boolean }) {
     this.perspectiveCamera.position.set(4, 4, 4);
     this.scene.background = new THREE.Color(0xf0f0f0);
     this.scene.add(new THREE.AxesHelper(5));
@@ -79,7 +79,11 @@ class StoryScene {
   };
 
   setCanvas(canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    this.renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true,
+      logarithmicDepthBuffer: this.options.logDepthBuffer,
+    });
     this.renderer.setPixelRatio(window.devicePixelRatio);
 
     this.perspectiveCamera.aspect = canvas.clientWidth / canvas.clientHeight;
@@ -118,6 +122,7 @@ function BasicTemplate({
   positionX,
   positionY,
   positionZ,
+  logDepthBuffer = false,
 }: {
   text: string;
   lineHeight: number;
@@ -134,10 +139,11 @@ function BasicTemplate({
   positionX: number;
   positionY: number;
   positionZ: number;
+  logDepthBuffer: boolean;
 }): JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const [storyScene] = useState(() => new StoryScene());
+  const [storyScene] = useState(() => new StoryScene({ logDepthBuffer }));
   const [label, setLabel] = useState<Label>();
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -236,5 +242,10 @@ export const CustomColors: StoryObj<typeof meta> = {
     backgroundColor: "#1295d1",
     bgOpacity: 0.8,
     fgOpacity: 0.3,
+  },
+};
+export const LogarithmicDepth: StoryObj<typeof meta> = {
+  args: {
+    logDepthBuffer: true,
   },
 };
