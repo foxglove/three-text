@@ -5,16 +5,18 @@ import { FontManager, FontManagerOptions } from "./FontManager";
 
 const tempVec2 = new THREE.Vector2();
 
-export class LabelMaterial extends THREE.RawShaderMaterial {
+export class LabelMaterial extends THREE.ShaderMaterial {
   picking: boolean;
 
   constructor(params: { atlasTexture?: THREE.Texture; picking?: boolean }) {
     super({
       glslVersion: THREE.GLSL3,
       vertexShader: /* glsl */ `\
+#include <common>
+#include <logdepthbuf_pars_vertex>
+
 precision highp float;
 precision highp int;
-uniform mat4 projectionMatrix, modelViewMatrix, modelMatrix;
 
 uniform bool uBillboard;
 uniform bool uSizeAttenuation;
@@ -24,8 +26,6 @@ uniform vec2 uTextureSize;
 uniform vec2 uAnchorPoint;
 uniform vec2 uCanvasSize;
 
-in vec2 uv;
-in vec3 position;
 in vec2 instanceBoxPosition, instanceCharPosition;
 in vec2 instanceUv;
 in vec2 instanceBoxSize, instanceCharSize;
@@ -62,6 +62,8 @@ void main() {
   } else {
     gl_Position = projectionMatrix * modelViewMatrix * vec4(vertexPos, 0.0, 1.0);
   }
+
+  #include <logdepthbuf_vertex>
 }
 `,
       fragmentShader:
@@ -72,10 +74,15 @@ void main() {
 #else
   precision mediump float;
 #endif
+
+#include <logdepthbuf_pars_fragment>
+
 uniform vec4 objectId;
 out vec4 outColor;
 void main() {
   outColor = objectId;
+
+  #include <logdepthbuf_fragment>
 }
 `
           : /* glsl */ `\
@@ -84,6 +91,9 @@ void main() {
 #else
   precision mediump float;
 #endif
+
+#include <logdepthbuf_pars_fragment>
+
 uniform sampler2D uMap;
 uniform mediump vec4 uColor, uBackgroundColor;
 uniform float uScale;
@@ -92,13 +102,6 @@ in mediump vec2 vUv;
 in mediump vec2 vPosInLabel;
 in mediump vec2 vInsideChar;
 out vec4 outColor;
-
-${
-  // for LinearTosRGB()
-  (THREE.ShaderChunk.colorspace_pars_fragment as string | undefined) ??
-  // for backward compatibility with three@<154
-  (THREE.ShaderChunk as Record<string, string>).encodings_pars_fragment
-}
 
 // From https://github.com/Jam3/three-bmfont-text/blob/e17efbe4e9392a83d4c5ee35c67eca5a11a13395/shaders/sdf.js
 float aastep(float threshold, float value) {
@@ -114,6 +117,8 @@ void main() {
   bool insideChar = vInsideChar.x >= 0.0 && vInsideChar.x <= 1.0 && vInsideChar.y >= 0.0 && vInsideChar.y <= 1.0;
   outColor = insideChar ? outColor : uBackgroundColor;
   outColor = LinearTosRGB(outColor); // assumes output encoding is srgb
+
+  #include <logdepthbuf_fragment>
 }
 `,
       uniforms: {
