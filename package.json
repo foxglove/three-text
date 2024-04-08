@@ -37,9 +37,9 @@
   "devDependencies": {
     "@foxglove/eslint-plugin": "1.0.1",
     "@foxglove/tsconfig": "2.0.0",
-    "@storybook/addon-essentials": "7.6.16",
-    "@storybook/react": "7.6.16",
-    "@storybook/react-webpack5": "7.6.16",
+    "@storybook/addon-essentials": "8.0.6",
+    "@storybook/react": "8.0.6",
+    "@storybook/react-webpack5": "8.0.6",
     "@types/jest": "29.5.12",
     "@types/node": "20.11.17",
     "@types/react": "18.2.56",
@@ -62,7 +62,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "rimraf": "5.0.5",
-    "storybook": "7.6.16",
+    "storybook": "8.0.6",
     "three": "0.160.1",
     "ts-jest": "29.1.2",
     "typescript": "5.3.3"
