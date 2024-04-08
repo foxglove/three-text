@@ -1838,7 +1838,7 @@ __metadata:
     "@storybook/react": "npm:7.6.16"
     "@storybook/react-webpack5": "npm:7.6.16"
     "@types/jest": "npm:29.5.12"
-    "@types/node": "npm:20.11.17"
+    "@types/node": "npm:20.12.5"
     "@types/react": "npm:18.2.56"
     "@types/three": "npm:0.160.0"
     "@typescript-eslint/eslint-plugin": "npm:7.0.2"
@@ -4179,12 +4179,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.11.17":
-  version: 20.11.17
-  resolution: "@types/node@npm:20.11.17"
+"@types/node@npm:20.12.5":
+  version: 20.12.5
+  resolution: "@types/node@npm:20.12.5"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 1f30dae80b416cbf38f133a619ffb0e9fb9e7bc58f82d900bf73816ae5781740c4640892bf5971dd9c12570d5d05241646be3e7540bb4e059322ec6af4e51e15
+  checksum: 2da65516fba98f0417620e42bddbe53e144d4782d69cd37f99df2537c6850b9cfbdb8a017f02c61e9a074bcac84f9f3f221b250474ac8c6b95d507a47e8d53f9
   languageName: node
   linkType: hard
 
