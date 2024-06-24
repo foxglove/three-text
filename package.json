@@ -43,7 +43,7 @@
     "@types/jest": "29.5.12",
     "@types/node": "20.12.8",
     "@types/react": "18.3.3",
-    "@types/three": "0.160.0",
+    "@types/three": "0.165.0",
     "@typescript-eslint/eslint-plugin": "7.0.2",
     "@typescript-eslint/parser": "7.0.2",
     "chromatic": "11.3.2",
@@ -63,7 +63,7 @@
     "react-dom": "18.2.0",
     "rimraf": "5.0.7",
     "storybook": "7.6.16",
-    "three": "0.160.1",
+    "three": "0.165.0",
     "ts-jest": "29.1.2",
     "typescript": "5.4.5"
   },
