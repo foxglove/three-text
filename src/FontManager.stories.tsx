@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactElement } from "react";
 
 import { AtlasData, FontManager } from "./FontManager";
 
@@ -21,7 +21,7 @@ function atlasToImageData(atlas: AtlasData) {
   return img;
 }
 
-export function Atlas(): JSX.Element {
+export function Atlas(): ReactElement {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     if (!canvasRef.current) {
@@ -39,7 +39,7 @@ export function Atlas(): JSX.Element {
   return <canvas ref={canvasRef} style={{ backgroundColor: "black" }} />;
 }
 
-export function Layout(): JSX.Element {
+export function Layout(): ReactElement {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     if (!canvasRef.current) {

@@ -8,9 +8,6 @@
   "editor.formatOnSave": true,
   "editor.insertSpaces": true,
   "editor.tabSize": 2,
-  "eslint.options": {
-    "reportUnusedDisableDirectives": "error"
-  },
   "files.eol": "\n",
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,

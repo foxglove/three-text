@@ -1,0 +1,12 @@
+// -*- jsonc -*-
+{
+  "extends": "@foxglove/tsconfig/base",
+  "include": ["**/*", ".storybook/**/*"],
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "lib": ["DOM", "es2020"],
+    "jsx": "react-jsx"
+  }
+}

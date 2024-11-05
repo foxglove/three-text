@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactElement } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
@@ -140,7 +140,7 @@ function BasicTemplate({
   positionY: number;
   positionZ: number;
   logDepthBuffer: boolean;
-}): JSX.Element {
+}): ReactElement {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [storyScene] = useState(() => new StoryScene({ logDepthBuffer }));
