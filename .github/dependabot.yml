@@ -16,9 +16,6 @@ updates:
         patterns:
           - "storybook"
           - "@storybook/*"
-      eslint:
-        patterns:
-          - "@typescript-eslint/*"
       jest:
         patterns:
           - "jest"
