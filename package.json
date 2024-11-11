@@ -42,7 +42,7 @@
     "@storybook/react-webpack5": "7.6.16",
     "@types/jest": "29.5.14",
     "@types/node": "22.7.5",
-    "@types/react": "18.3.3",
+    "@types/react": "18.3.12",
     "@types/three": "0.165.0",
     "chromatic": "11.3.2",
     "eslint": "9.14.0",
