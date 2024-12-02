@@ -1901,7 +1901,7 @@ __metadata:
     react-dom: "npm:18.3.1"
     rimraf: "npm:6.0.1"
     storybook: "npm:7.6.16"
-    three: "npm:0.165.0"
+    three: "npm:0.171.0"
     ts-jest: "npm:29.1.2"
     typescript: "npm:5.6.3"
     typescript-eslint: "npm:8.13.0"
@@ -12523,10 +12523,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"three@npm:0.165.0":
-  version: 0.165.0
-  resolution: "three@npm:0.165.0"
-  checksum: 235e52d4634c4fc400de7850af466fdcfaf70c621463a8d886b332faccfbc1c4f697cd67bf848da21e1b6e2fb3e7a153aafc217238ee50923b1a5ce7d47d3973
+"three@npm:0.171.0":
+  version: 0.171.0
+  resolution: "three@npm:0.171.0"
+  checksum: 33a36861c815b914f79dc8546ac30610af40e3f16acc85be851933e6fcab2d90d4227a62c1d3d86bddab672c908103298daaf592615147721e3dbd719619952a
   languageName: node
   linkType: hard
 
