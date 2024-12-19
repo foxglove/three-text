@@ -76,7 +76,12 @@ export class FontManager extends EventDispatcher<EventMap> {
 
   update(newChars: string): void {
     if (this.alphabet.length > MAX_CHARS) {
-      // we would have already reported an error; just bail this time
+      this.dispatchEvent({
+        type: "error",
+        error: new Error(
+          `Exceeded maximum unique characters: ${this.alphabet.length} > ${MAX_CHARS}`,
+        ),
+      });
       return;
     }
     let needsUpdate = false;
