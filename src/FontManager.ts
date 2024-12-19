@@ -46,7 +46,7 @@ type EventMap = {
   error: { error: Error };
 };
 
-const MAX_CHARS = 1024;
+const MAX_CHARS = 2048;
 
 /**
  * Manages the creation of a Signed Distance Field (SDF) font atlas, and performs text layout to
