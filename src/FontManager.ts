@@ -41,11 +41,18 @@ export type FontManagerOptions = {
   fontSize?: number;
 };
 
+type EventMap = {
+  atlasChange: object;
+  error: { error: Error };
+};
+
+const MAX_CHARS = 2048;
+
 /**
  * Manages the creation of a Signed Distance Field (SDF) font atlas, and performs text layout to
  * generate attributes for rendering text using the atlas.
  */
-export class FontManager extends EventDispatcher<{ atlasChange: object }> {
+export class FontManager extends EventDispatcher<EventMap> {
   private alphabet = "";
   atlasData: AtlasData = {
     data: new Uint8ClampedArray(),
@@ -68,12 +75,30 @@ export class FontManager extends EventDispatcher<{ atlasChange: object }> {
   }
 
   update(newChars: string): void {
+    if (this.alphabet.length > MAX_CHARS) {
+      this.dispatchEvent({
+        type: "error",
+        error: new Error(
+          `Exceeded maximum unique characters: ${this.alphabet.length} > ${MAX_CHARS}`,
+        ),
+      });
+      return;
+    }
     let needsUpdate = false;
     for (const char of newChars) {
       if (!this.alphabet.includes(char)) {
         this.alphabet += char;
         needsUpdate = true;
       }
+    }
+    if (this.alphabet.length > MAX_CHARS) {
+      this.dispatchEvent({
+        type: "error",
+        error: new Error(
+          `Exceeded maximum unique characters: ${this.alphabet.length} > ${MAX_CHARS}`,
+        ),
+      });
+      return;
     }
 
     if (!needsUpdate) {
@@ -99,9 +124,13 @@ export class FontManager extends EventDispatcher<{ atlasChange: object }> {
     let maxAscent = 0;
     for (const char of this.alphabet) {
       if (charInfo[char] != undefined) {
-        throw new Error(
-          `Duplicate character in alphabet: ${char} (${char.codePointAt(0) ?? "undefined"})`,
-        );
+        this.dispatchEvent({
+          type: "error",
+          error: new Error(
+            `Duplicate character in alphabet: ${char} (${char.codePointAt(0) ?? "undefined"})`,
+          ),
+        });
+        continue;
       }
       const sdf = tinysdf.draw(char);
       if (x + sdf.width >= atlasWidth) {
@@ -110,7 +139,11 @@ export class FontManager extends EventDispatcher<{ atlasChange: object }> {
         rowHeight = 0;
       }
       if (y + sdf.height >= atlasHeight) {
-        throw new Error(`Unable to fit all ${this.alphabet.length} characters in font atlas`);
+        this.dispatchEvent({
+          type: "error",
+          error: new Error(`Unable to fit all ${this.alphabet.length} characters in font atlas`),
+        });
+        continue;
       }
       rowHeight = Math.max(rowHeight, sdf.height);
       lineHeight = Math.max(lineHeight, rowHeight);

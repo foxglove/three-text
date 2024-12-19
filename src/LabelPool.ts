@@ -362,7 +362,13 @@ export class Label extends THREE.Object3D {
   }
 }
 
-export class LabelPool extends EventDispatcher<{ scaleFactorChange: object; atlasChange: object }> {
+type EventMap = {
+  scaleFactorChange: object;
+  atlasChange: object;
+  error: { error: Error };
+};
+
+export class LabelPool extends EventDispatcher<EventMap> {
   atlasTexture: THREE.DataTexture;
 
   private availableLabels: Label[] = [];
@@ -407,6 +413,9 @@ export class LabelPool extends EventDispatcher<{ scaleFactorChange: object; atla
       THREE.LinearFilter,
     );
 
+    this.fontManager.addEventListener("error", (event) => {
+      this.dispatchEvent(event);
+    });
     this.fontManager.addEventListener("atlasChange", () => {
       this._updateAtlasTexture();
     });
