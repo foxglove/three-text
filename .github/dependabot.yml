@@ -3,10 +3,16 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
-      interval: weekly
+      interval: monthly
+    labels: [] # disable default labels
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
     labels: [] # disable default labels
 
     # Define groups of dependencies to be updated together
