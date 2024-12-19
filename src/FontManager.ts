@@ -46,6 +46,8 @@ type EventMap = {
   error: { error: Error };
 };
 
+const MAX_CHARS = 1024;
+
 /**
  * Manages the creation of a Signed Distance Field (SDF) font atlas, and performs text layout to
  * generate attributes for rendering text using the atlas.
@@ -79,6 +81,15 @@ export class FontManager extends EventDispatcher<EventMap> {
         this.alphabet += char;
         needsUpdate = true;
       }
+    }
+    if (this.alphabet.length > MAX_CHARS) {
+      this.dispatchEvent({
+        type: "error",
+        error: new Error(
+          `Exceeded maximum unique characters: ${this.alphabet.length} > ${MAX_CHARS}`,
+        ),
+      });
+      return;
     }
 
     if (!needsUpdate) {
