@@ -75,6 +75,10 @@ export class FontManager extends EventDispatcher<EventMap> {
   }
 
   update(newChars: string): void {
+    if (this.alphabet.length > MAX_CHARS) {
+      // we would have already reported an error; just bail this time
+      return;
+    }
     let needsUpdate = false;
     for (const char of newChars) {
       if (!this.alphabet.includes(char)) {
