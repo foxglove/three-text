@@ -1,4 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { createDefaultEsmPreset } = require("ts-jest");
+
+/** @type {import("ts-jest").JestConfigWithTsJest} */
 module.exports = {
-  preset: "ts-jest",
-  testMatch: ["<rootDir>/src/**/*.test.ts"],
+  ...createDefaultEsmPreset({}),
+  setupFiles: ["jest-canvas-mock"],
 };
