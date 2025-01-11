@@ -1891,7 +1891,7 @@ __metadata:
     "@types/node": "npm:22.7.5"
     "@types/react": "npm:18.3.3"
     "@types/three": "npm:0.165.0"
-    chromatic: "npm:11.3.2"
+    chromatic: "npm:11.22.2"
     eslint: "npm:9.14.0"
     eslint-plugin-storybook: "npm:0.11.0"
     globals: "npm:15.12.0"
@@ -5686,9 +5686,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chromatic@npm:11.3.2":
-  version: 11.3.2
-  resolution: "chromatic@npm:11.3.2"
+"chromatic@npm:11.22.2":
+  version: 11.22.2
+  resolution: "chromatic@npm:11.22.2"
   peerDependencies:
     "@chromatic-com/cypress": ^0.*.* || ^1.0.0
     "@chromatic-com/playwright": ^0.*.* || ^1.0.0
@@ -5701,7 +5701,7 @@ __metadata:
     chroma: dist/bin.js
     chromatic: dist/bin.js
     chromatic-cli: dist/bin.js
-  checksum: 76a6f52ae5f43393fe6e16ec591ebe3bc6b71579b5842f5dc0100f76e29ecfc40479479db5fbb813eb29247645902c249ca8b75de50581a5d205fefd0c7f2561
+  checksum: 29b9afa333e83a1e04434030a948cb175c22de8b5908915d0507644aeaa3a5fe127ef7e5d0da6c53f48cc3d3d615325ff53da09cc471567b48187bf6336a68f9
   languageName: node
   linkType: hard
 
