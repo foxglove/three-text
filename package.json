@@ -44,7 +44,7 @@
     "@types/node": "22.7.5",
     "@types/react": "18.3.3",
     "@types/three": "0.165.0",
-    "chromatic": "11.3.2",
+    "chromatic": "11.25.2",
     "eslint": "9.14.0",
     "eslint-plugin-storybook": "0.11.0",
     "globals": "15.12.0",
