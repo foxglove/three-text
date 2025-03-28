@@ -116,7 +116,7 @@ void main() {
 
   bool insideChar = vInsideChar.x >= 0.0 && vInsideChar.x <= 1.0 && vInsideChar.y >= 0.0 && vInsideChar.y <= 1.0;
   outColor = insideChar ? outColor : uBackgroundColor;
-  outColor = LinearTosRGB(outColor); // assumes output encoding is srgb
+  outColor = sRGBTransferOETF(outColor); // assumes output encoding is srgb
 
   #include <logdepthbuf_fragment>
 }
