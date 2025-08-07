@@ -124,7 +124,9 @@ export class FontManager extends EventDispatcher<EventMap> {
       if (this.#lastCharPosition.y + sdf.height >= atlasHeight) {
         this.dispatchEvent({
           type: "error",
-          error: new Error(`Unable to fit all ${this.alphabet.length} characters in font atlas`),
+          error: new Error(
+            `Unable to fit all ${this.alphabet.length + newAlphabet.length} characters in font atlas`,
+          ),
         });
         continue;
       }
