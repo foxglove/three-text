@@ -60,11 +60,23 @@ export class FontManager extends EventDispatcher<EventMap> {
     maxAscent: 0,
     charInfo: {},
   };
-  #tinysdfCache: Record<string, TinySDF> = {};
+  #buffer: number;
+  #tinysdf: TinySDF;
   #lastCharPosition = { x: 0, y: 0, rowHeight: 0 };
 
-  constructor(public options: FontManagerOptions = {}) {
+  constructor(public readonly options: FontManagerOptions = {}) {
     super();
+
+    this.options.fontSize = this.options.fontSize ?? 48;
+    this.#buffer = Math.ceil(this.options.fontSize / 16);
+    const fontFamily = this.options.fontFamily ?? "monospace";
+    this.#tinysdf = new TinySDF({
+      fontSize: this.options.fontSize,
+      buffer: this.#buffer,
+      radius: Math.ceil(this.options.fontSize / 4),
+      fontFamily,
+    });
+
     const start = " ".charCodeAt(0);
     const end = "~".charCodeAt(0);
     let initialAlphabet = REPLACEMENT_CHARACTER + "\n"; // always include replacement character
@@ -87,22 +99,7 @@ export class FontManager extends EventDispatcher<EventMap> {
     if (!needsUpdate) {
       return;
     }
-    const atlasWidth = this.atlasData.width;
-    const atlasHeight = this.atlasData.height;
     const atlas = this.atlasData.data;
-    const fontSize = this.options.fontSize ?? 48;
-    const buffer = Math.ceil(fontSize / 16);
-    const fontFamily = this.options.fontFamily ?? "monospace";
-    let tinysdf = this.#tinysdfCache[`${fontSize}/${fontFamily}`];
-    if (tinysdf == undefined) {
-      tinysdf = new TinySDF({
-        fontSize,
-        buffer,
-        radius: Math.ceil(fontSize / 4),
-        fontFamily,
-      });
-      this.#tinysdfCache[`${fontSize}/${fontFamily}`] = tinysdf;
-    }
 
     const charInfo: Record<string, CharInfo> = this.atlasData.charInfo;
     for (const char of newAlphabet) {
@@ -115,13 +112,13 @@ export class FontManager extends EventDispatcher<EventMap> {
         });
         continue;
       }
-      const sdf = tinysdf.draw(char);
-      if (this.#lastCharPosition.x + sdf.width >= atlasWidth) {
+      const sdf = this.#tinysdf.draw(char);
+      if (this.#lastCharPosition.x + sdf.width >= this.atlasData.width) {
         this.#lastCharPosition.x = 0;
         this.#lastCharPosition.y += this.#lastCharPosition.rowHeight;
         this.#lastCharPosition.rowHeight = 0;
       }
-      if (this.#lastCharPosition.y + sdf.height >= atlasHeight) {
+      if (this.#lastCharPosition.y + sdf.height >= this.atlasData.height) {
         this.dispatchEvent({
           type: "error",
           error: new Error(
@@ -138,10 +135,10 @@ export class FontManager extends EventDispatcher<EventMap> {
       for (let r = 0; r < sdf.height; r++) {
         atlas.set(
           sdf.data.subarray(sdf.width * r, sdf.width * (r + 1)),
-          atlasWidth * (this.#lastCharPosition.y + r) + this.#lastCharPosition.x,
+          this.atlasData.width * (this.#lastCharPosition.y + r) + this.#lastCharPosition.x,
         );
       }
-      charInfo[char] = {
+      this.atlasData.charInfo[char] = {
         atlasX: this.#lastCharPosition.x,
         atlasY: this.#lastCharPosition.y,
         width: sdf.width,
@@ -150,24 +147,14 @@ export class FontManager extends EventDispatcher<EventMap> {
         // Use the full width in order to avoid character overlaps and z-fighting. Use glyphAdvance
         // if it is larger than width (e.g. for space characters). Subtract 1x the buffer so we
         // don't end up with *too* much space between characters.
-        xAdvance: Math.max(sdf.glyphAdvance, sdf.width - buffer),
+        xAdvance: Math.max(sdf.glyphAdvance, sdf.width - this.#buffer),
       };
       this.atlasData.maxAscent = Math.max(this.atlasData.maxAscent, sdf.glyphTop);
       this.#lastCharPosition.x += sdf.width;
     }
 
-    for (const char of newAlphabet) {
-      this.alphabet += char;
-    }
+    this.alphabet += newAlphabet;
 
-    this.atlasData = {
-      data: atlas,
-      width: atlasWidth,
-      height: atlasHeight,
-      charInfo,
-      maxAscent: this.atlasData.maxAscent,
-      lineHeight: this.atlasData.lineHeight,
-    };
     this.dispatchEvent({ type: "atlasChange" });
   }
 
