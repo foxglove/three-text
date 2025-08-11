@@ -1,6 +1,6 @@
 {
   "name": "@foxglove/three-text",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Render text in 3D using Signed Distance Fields",
   "license": "MIT",
   "repository": {
