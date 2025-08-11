@@ -52,17 +52,31 @@ type EventMap = {
  */
 export class FontManager extends EventDispatcher<EventMap> {
   private alphabet = "";
-  atlasData: AtlasData = {
-    data: new Uint8ClampedArray(),
-    width: 0,
-    height: 0,
+  readonly atlasData: AtlasData = {
+    data: new Uint8ClampedArray(1024 * 1024),
+    width: 1024,
+    height: 1024,
     lineHeight: 0,
     maxAscent: 0,
     charInfo: {},
   };
+  #buffer: number;
+  #tinysdf: TinySDF;
+  #lastCharPosition = { x: 0, y: 0, rowHeight: 0 };
 
-  constructor(public options: FontManagerOptions = {}) {
+  constructor(public readonly options: FontManagerOptions = {}) {
     super();
+
+    this.options.fontSize = this.options.fontSize ?? 48;
+    this.#buffer = Math.ceil(this.options.fontSize / 16);
+    const fontFamily = this.options.fontFamily ?? "monospace";
+    this.#tinysdf = new TinySDF({
+      fontSize: this.options.fontSize,
+      buffer: this.#buffer,
+      radius: Math.ceil(this.options.fontSize / 4),
+      fontFamily,
+    });
+
     const start = " ".charCodeAt(0);
     const end = "~".charCodeAt(0);
     let initialAlphabet = REPLACEMENT_CHARACTER + "\n"; // always include replacement character
@@ -73,64 +87,43 @@ export class FontManager extends EventDispatcher<EventMap> {
   }
 
   update(newChars: string): void {
-    let needsUpdate = false;
+    let newAlphabet = "";
+    const atlas = this.atlasData.data;
+
+    // Storing these as local variables during the loop for performance
+    let x = this.#lastCharPosition.x;
+    let y = this.#lastCharPosition.y;
+    let rowHeight = this.#lastCharPosition.rowHeight;
     for (const char of newChars) {
-      if (!this.alphabet.includes(char)) {
-        this.alphabet += char;
-        needsUpdate = true;
-      }
-    }
-
-    if (!needsUpdate) {
-      return;
-    }
-    const atlasWidth = 1024;
-    const atlasHeight = 1024;
-    const atlas = new Uint8ClampedArray(atlasWidth * atlasHeight);
-    const fontSize = this.options.fontSize ?? 48;
-    const buffer = Math.ceil(fontSize / 16);
-    const tinysdf = new TinySDF({
-      fontSize,
-      buffer,
-      radius: Math.ceil(fontSize / 4),
-      fontFamily: this.options.fontFamily ?? "monospace",
-    });
-
-    const charInfo: Record<string, CharInfo> = {};
-    let x = 0;
-    let y = 0;
-    let rowHeight = 0;
-    let lineHeight = 0;
-    let maxAscent = 0;
-    for (const char of this.alphabet) {
-      if (charInfo[char] != undefined) {
-        this.dispatchEvent({
-          type: "error",
-          error: new Error(
-            `Duplicate character in alphabet: ${char} (${char.codePointAt(0) ?? "undefined"})`,
-          ),
-        });
+      if (this.alphabet.includes(char)) {
         continue;
       }
-      const sdf = tinysdf.draw(char);
-      if (x + sdf.width >= atlasWidth) {
+      newAlphabet += char;
+
+      const sdf = this.#tinysdf.draw(char);
+      if (x + sdf.width >= this.atlasData.width) {
         x = 0;
         y += rowHeight;
         rowHeight = 0;
       }
-      if (y + sdf.height >= atlasHeight) {
+      if (y + sdf.height >= this.atlasData.height) {
         this.dispatchEvent({
           type: "error",
-          error: new Error(`Unable to fit all ${this.alphabet.length} characters in font atlas`),
+          error: new Error(
+            `Unable to fit all ${this.alphabet.length + newAlphabet.length} characters in font atlas`,
+          ),
         });
         continue;
       }
       rowHeight = Math.max(rowHeight, sdf.height);
-      lineHeight = Math.max(lineHeight, rowHeight);
+      this.atlasData.lineHeight = Math.max(this.atlasData.lineHeight, rowHeight);
       for (let r = 0; r < sdf.height; r++) {
-        atlas.set(sdf.data.subarray(sdf.width * r, sdf.width * (r + 1)), atlasWidth * (y + r) + x);
+        atlas.set(
+          sdf.data.subarray(sdf.width * r, sdf.width * (r + 1)),
+          this.atlasData.width * (y + r) + x,
+        );
       }
-      charInfo[char] = {
+      this.atlasData.charInfo[char] = {
         atlasX: x,
         atlasY: y,
         width: sdf.width,
@@ -139,21 +132,19 @@ export class FontManager extends EventDispatcher<EventMap> {
         // Use the full width in order to avoid character overlaps and z-fighting. Use glyphAdvance
         // if it is larger than width (e.g. for space characters). Subtract 1x the buffer so we
         // don't end up with *too* much space between characters.
-        xAdvance: Math.max(sdf.glyphAdvance, sdf.width - buffer),
+        xAdvance: Math.max(sdf.glyphAdvance, sdf.width - this.#buffer),
       };
-      maxAscent = Math.max(maxAscent, sdf.glyphTop);
+      this.atlasData.maxAscent = Math.max(this.atlasData.maxAscent, sdf.glyphTop);
       x += sdf.width;
     }
+    this.#lastCharPosition.x = x;
+    this.#lastCharPosition.y = y;
+    this.#lastCharPosition.rowHeight = rowHeight;
 
-    this.atlasData = {
-      data: atlas,
-      width: atlasWidth,
-      height: atlasHeight,
-      charInfo,
-      maxAscent,
-      lineHeight,
-    };
-    this.dispatchEvent({ type: "atlasChange" });
+    if (newAlphabet !== "") {
+      this.alphabet += newAlphabet;
+      this.dispatchEvent({ type: "atlasChange" });
+    }
   }
 
   layout(text: string): LayoutInfo {
