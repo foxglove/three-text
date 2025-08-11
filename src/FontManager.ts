@@ -52,7 +52,7 @@ type EventMap = {
  */
 export class FontManager extends EventDispatcher<EventMap> {
   private alphabet = "";
-  atlasData: AtlasData = {
+  readonly atlasData: AtlasData = {
     data: new Uint8ClampedArray(1024 * 1024),
     width: 1024,
     height: 1024,
@@ -87,38 +87,26 @@ export class FontManager extends EventDispatcher<EventMap> {
   }
 
   update(newChars: string): void {
-    let needsUpdate = false;
     let newAlphabet = "";
-    for (const char of newChars) {
-      if (!this.alphabet.includes(char)) {
-        newAlphabet += char;
-        needsUpdate = true;
-      }
-    }
-
-    if (!needsUpdate) {
-      return;
-    }
     const atlas = this.atlasData.data;
 
-    const charInfo: Record<string, CharInfo> = this.atlasData.charInfo;
-    for (const char of newAlphabet) {
-      if (charInfo[char] != undefined) {
-        this.dispatchEvent({
-          type: "error",
-          error: new Error(
-            `Duplicate character in alphabet: ${char} (${char.codePointAt(0) ?? "undefined"})`,
-          ),
-        });
+    // Storing these as local variables during the loop for performance
+    let x = this.#lastCharPosition.x;
+    let y = this.#lastCharPosition.y;
+    let rowHeight = this.#lastCharPosition.rowHeight;
+    for (const char of newChars) {
+      if (this.alphabet.includes(char)) {
         continue;
       }
+      newAlphabet += char;
+
       const sdf = this.#tinysdf.draw(char);
-      if (this.#lastCharPosition.x + sdf.width >= this.atlasData.width) {
-        this.#lastCharPosition.x = 0;
-        this.#lastCharPosition.y += this.#lastCharPosition.rowHeight;
-        this.#lastCharPosition.rowHeight = 0;
+      if (x + sdf.width >= this.atlasData.width) {
+        x = 0;
+        y += rowHeight;
+        rowHeight = 0;
       }
-      if (this.#lastCharPosition.y + sdf.height >= this.atlasData.height) {
+      if (y + sdf.height >= this.atlasData.height) {
         this.dispatchEvent({
           type: "error",
           error: new Error(
@@ -127,20 +115,17 @@ export class FontManager extends EventDispatcher<EventMap> {
         });
         continue;
       }
-      this.#lastCharPosition.rowHeight = Math.max(this.#lastCharPosition.rowHeight, sdf.height);
-      this.atlasData.lineHeight = Math.max(
-        this.atlasData.lineHeight,
-        this.#lastCharPosition.rowHeight,
-      );
+      rowHeight = Math.max(rowHeight, sdf.height);
+      this.atlasData.lineHeight = Math.max(this.atlasData.lineHeight, rowHeight);
       for (let r = 0; r < sdf.height; r++) {
         atlas.set(
           sdf.data.subarray(sdf.width * r, sdf.width * (r + 1)),
-          this.atlasData.width * (this.#lastCharPosition.y + r) + this.#lastCharPosition.x,
+          this.atlasData.width * (y + r) + x,
         );
       }
       this.atlasData.charInfo[char] = {
-        atlasX: this.#lastCharPosition.x,
-        atlasY: this.#lastCharPosition.y,
+        atlasX: x,
+        atlasY: y,
         width: sdf.width,
         height: sdf.height,
         yOffset: sdf.glyphTop,
@@ -150,12 +135,16 @@ export class FontManager extends EventDispatcher<EventMap> {
         xAdvance: Math.max(sdf.glyphAdvance, sdf.width - this.#buffer),
       };
       this.atlasData.maxAscent = Math.max(this.atlasData.maxAscent, sdf.glyphTop);
-      this.#lastCharPosition.x += sdf.width;
+      x += sdf.width;
     }
+    this.#lastCharPosition.x = x;
+    this.#lastCharPosition.y = y;
+    this.#lastCharPosition.rowHeight = rowHeight;
 
-    this.alphabet += newAlphabet;
-
-    this.dispatchEvent({ type: "atlasChange" });
+    if (newAlphabet !== "") {
+      this.alphabet += newAlphabet;
+      this.dispatchEvent({ type: "atlasChange" });
+    }
   }
 
   layout(text: string): LayoutInfo {
