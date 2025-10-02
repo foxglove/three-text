@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
+import foxglove from "@foxglove/eslint-plugin";
+import storybook from "eslint-plugin-storybook";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
-const foxglove = require("@foxglove/eslint-plugin");
-const storybook = require("eslint-plugin-storybook");
-const globals = require("globals");
-const tseslint = require("typescript-eslint");
-
-module.exports = tseslint.config(
+export default tseslint.config(
   {
     ignores: ["**/dist", "!.storybook"],
   },

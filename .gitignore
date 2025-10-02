@@ -12,3 +12,6 @@ node_modules/
 !.yarn/sdks
 !.yarn/versions
 package.tgz
+
+*storybook.log
+storybook-static
