@@ -823,7 +823,6 @@ __metadata:
     three: "npm:0.174.0"
     ts-jest: "npm:29.3.1"
     typescript: "npm:5.9.3"
-    typescript-eslint: "npm:8.45.0"
   peerDependencies:
     three: ">=0.157.0"
   languageName: unknown
@@ -8467,7 +8466,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript-eslint@npm:8.45.0, typescript-eslint@npm:^8":
+"typescript-eslint@npm:^8":
   version: 8.45.0
   resolution: "typescript-eslint@npm:8.45.0"
   dependencies:

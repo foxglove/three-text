@@ -1,9 +1,9 @@
 import foxglove from "@foxglove/eslint-plugin";
+import { defineConfig } from "eslint/config";
 import storybook from "eslint-plugin-storybook";
 import globals from "globals";
-import tseslint from "typescript-eslint";
 
-export default tseslint.config(
+export default defineConfig(
   {
     ignores: ["**/dist", "!.storybook"],
   },
