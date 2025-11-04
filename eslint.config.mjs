@@ -1,9 +1,11 @@
 import foxglove from "@foxglove/eslint-plugin";
-import { defineConfig } from "eslint/config";
 import storybook from "eslint-plugin-storybook";
 import globals from "globals";
+import tseslint from "typescript-eslint";
 
-export default defineConfig(
+// avoid a type error when using eslint's builtin defineConfig()
+// eslint-disable-next-line @typescript-eslint/no-deprecated
+export default tseslint.config(
   {
     ignores: ["**/dist", "!.storybook"],
   },
