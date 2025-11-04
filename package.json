@@ -42,7 +42,7 @@
     "@types/jest": "30.0.0",
     "@types/node": "22.7.5",
     "@types/react": "18.3.3",
-    "@types/three": "0.174.0",
+    "@types/three": "0.181.0",
     "chromatic": "11.27.0",
     "eslint": "9.36.0",
     "eslint-plugin-storybook": "9.1.10",
@@ -55,7 +55,7 @@
     "react-dom": "18.3.1",
     "rimraf": "6.0.1",
     "storybook": "9.1.10",
-    "three": "0.174.0",
+    "three": "0.181.0",
     "ts-jest": "29.4.5",
     "typescript": "5.9.3"
   },
