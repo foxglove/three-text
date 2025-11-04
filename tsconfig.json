@@ -4,7 +4,7 @@
   "include": ["./src/**/*"],
   "compilerOptions": {
     "rootDir": "./src",
-    "outDir": "./dist/esm",
+    "noEmit": true,
     "moduleResolution": "bundler",
 
     // DOM and JSX settings should only apply to *.stories.*, but VS Code doesn't allow using a

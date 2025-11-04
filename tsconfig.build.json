@@ -1,0 +1,10 @@
+// -*- jsonc -*-
+// tsconfig for building for distribution, excluding stories and tests
+{
+  "extends": "./tsconfig.json",
+  "exclude": ["**/*.stories.tsx", "**/*.test.ts"],
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "./dist/esm"
+  }
+}

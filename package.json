@@ -20,11 +20,12 @@
   ],
   "scripts": {
     "clean": "rimraf dist *.tsbuildinfo",
-    "prepack": "tsc -b tsconfig.json tsconfig.cjs.json",
-    "build": "tsc -b tsconfig.json tsconfig.cjs.json",
+    "prepack": "tsc -b tsconfig.build.json tsconfig.cjs.json",
+    "build": "tsc -b tsconfig.build.json tsconfig.cjs.json",
     "lint": "eslint --fix .",
     "lint:ci": "eslint .",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "typecheck": "tsc -b --noEmit tsconfig.json",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
