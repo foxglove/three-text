@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react-webpack5";
 import { useEffect, useRef, useState, type ReactElement } from "react";
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 import { Label, LabelPool } from "./LabelPool";
 

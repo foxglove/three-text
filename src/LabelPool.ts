@@ -8,7 +8,10 @@ const tempVec2 = new THREE.Vector2();
 export class LabelMaterial extends THREE.ShaderMaterial {
   picking: boolean;
 
-  constructor(params: { atlasTexture?: THREE.Texture; picking?: boolean }) {
+  constructor(params: {
+    atlasTexture?: THREE.Texture<THREE.DataTextureImageData>;
+    picking?: boolean;
+  }) {
     super({
       glslVersion: THREE.GLSL3,
       vertexShader: /* glsl */ `\
