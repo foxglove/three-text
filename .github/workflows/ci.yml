@@ -55,12 +55,3 @@ jobs:
           cache: yarn
 
       - run: yarn install --immutable
-
-      # Chromatic only runs on pushes or pulls to our source repo
-      - name: Publish to Chromatic
-        uses: chromaui/action@v13
-        if: ${{ github.event.repository.full_name == 'foxglove/three-text' }}
-        with:
-          projectToken: de34ab810be0
-          autoAcceptChanges: main
-          exitOnceUploaded: true
