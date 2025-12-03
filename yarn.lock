@@ -820,7 +820,7 @@ __metadata:
     "@types/react": "npm:19.2.2"
     "@types/three": "npm:0.181.0"
     eslint: "npm:9.39.1"
-    eslint-plugin-storybook: "npm:10.0.4"
+    eslint-plugin-storybook: "npm:10.1.4"
     globals: "npm:16.4.0"
     jest: "npm:30.2.0"
     jest-canvas-mock: "npm:2.5.2"
@@ -4050,15 +4050,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-storybook@npm:10.0.4":
-  version: 10.0.4
-  resolution: "eslint-plugin-storybook@npm:10.0.4"
+"eslint-plugin-storybook@npm:10.1.4":
+  version: 10.1.4
+  resolution: "eslint-plugin-storybook@npm:10.1.4"
   dependencies:
     "@typescript-eslint/utils": "npm:^8.8.1"
   peerDependencies:
     eslint: ">=8"
-    storybook: ^10.0.4
-  checksum: 10c0/a2d486a6e45d1ce731333c439b51fc44b4a9292e8c0bca914534dab11cd37a3c25c62e8cbb1bb3b35e5e8b87d6ff2c7d8256c4f89a34c444138c4c738c52e1fc
+    storybook: ^10.1.4
+  checksum: 10c0/d68a0244318a386877de12d22ce309725f9f7057002f5182fa50fc965e26ced7d051432d7495046f13ee5803634ce53ef9e58cfe2866c3251f2ff94f8ab50e74
   languageName: node
   linkType: hard
 
