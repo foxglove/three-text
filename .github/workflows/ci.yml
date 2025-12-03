@@ -60,8 +60,9 @@ jobs:
 
       - name: Deploy Storybook
         uses: cloudflare/wrangler-action@v3
-        # Only run on pushes or pulls to our source repo
-        if: ${{ github.event.repository.full_name == 'foxglove/three-text' }}
+        # Only run if not a fork, and not a dependabot PR, since we do not have
+        # access to secrets in these environments.
+        if: ${{ !github.event.pull_request.head.repo.fork && github.actor != 'dependabot[bot]' }}
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
