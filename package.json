@@ -55,7 +55,7 @@
     "react-dom": "19.2.0",
     "rimraf": "6.0.1",
     "storybook": "10.0.4",
-    "three": "0.181.0",
+    "three": "0.181.2",
     "ts-jest": "29.4.5",
     "typescript": "5.9.3"
   },

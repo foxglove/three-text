@@ -830,7 +830,7 @@ __metadata:
     react-dom: "npm:19.2.0"
     rimraf: "npm:6.0.1"
     storybook: "npm:10.0.4"
-    three: "npm:0.181.0"
+    three: "npm:0.181.2"
     ts-jest: "npm:29.4.5"
     typescript: "npm:5.9.3"
   peerDependencies:
@@ -7979,10 +7979,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"three@npm:0.181.0":
-  version: 0.181.0
-  resolution: "three@npm:0.181.0"
-  checksum: 10c0/676dff297e54dc8bb55ce059d5bfe2332c817e207025d07d1a24fd48376db276d9bc6aa4c47ab7b1ba551752f1e42aacf7248eac94354ebbfa0d43042c6a50f1
+"three@npm:0.181.2":
+  version: 0.181.2
+  resolution: "three@npm:0.181.2"
+  checksum: 10c0/b34b6240fbedebc7f8a9317c062f7ee5339de0e56250ba2ae3de52edb9c517dc8e9aaf6fe242e1bfff56808081e095db28be5ef1a05947e0c82aefada95c628b
   languageName: node
   linkType: hard
 
