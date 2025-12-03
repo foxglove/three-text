@@ -8,6 +8,6 @@ Render text in 3D using Signed Distance Fields
 
 ## Usage examples
 
-View live example [in Storybook](https://main--62ff21ad11a55228f80a9365.chromatic.com/?path=/story/labelpool--basic). View example usage at [LabelPool.stories.tsx](./src/LabelPool.stories.tsx).
+View live example [in Storybook](https://foxglove-three-text-storybook.pages.dev/?path=/story/labelpool--basic). View example usage at [LabelPool.stories.tsx](./src/LabelPool.stories.tsx).
 
 To run Storybook locally, run `yarn storybook`.

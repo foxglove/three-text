@@ -16,12 +16,12 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - run: corepack enable
       - uses: actions/setup-node@v6
         with:
-          node-version: 22.x
+          node-version: 24.x
           registry-url: https://registry.npmjs.org
           cache: yarn
 
@@ -39,3 +39,32 @@ jobs:
         run: npm publish package.tgz --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+
+  storybook:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+          registry-url: https://registry.npmjs.org
+          cache: yarn
+
+      - run: yarn install --immutable
+      - run: yarn build-storybook
+
+      - name: Deploy Storybook
+        uses: cloudflare/wrangler-action@v3
+        # Only run if not a fork, and not a dependabot PR, since we do not have
+        # access to secrets in these environments.
+        if: ${{ !github.event.pull_request.head.repo.fork && github.actor != 'dependabot[bot]' }}
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy storybook-static --project-name=foxglove-three-text-storybook
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
