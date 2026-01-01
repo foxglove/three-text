@@ -41,7 +41,7 @@
     "@storybook/addon-webpack5-compiler-swc": "4.0.2",
     "@storybook/react-webpack5": "10.1.4",
     "@types/jest": "30.0.0",
-    "@types/node": "24.10.1",
+    "@types/node": "25.0.3",
     "@types/react": "19.2.2",
     "@types/three": "0.181.0",
     "eslint": "9.39.1",
