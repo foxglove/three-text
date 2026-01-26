@@ -33,10 +33,9 @@ jobs:
       - run: yarn run build
       - run: yarn run test
 
-      - run: yarn pack
       - name: Publish to NPM
         if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-        run: npx npm@11.7.0 publish package.tgz --provenance --access public
+        run: yarn npm publish --provenance --access public
 
   storybook:
     runs-on: ubuntu-latest
