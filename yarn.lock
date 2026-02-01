@@ -900,7 +900,7 @@ __metadata:
   resolution: "@foxglove/three-text@workspace:."
   dependencies:
     "@foxglove/eslint-plugin": "npm:2.1.0"
-    "@foxglove/tsconfig": "npm:2.0.0"
+    "@foxglove/tsconfig": "npm:3.2.0"
     "@mapbox/tiny-sdf": "npm:2.0.6"
     "@storybook/addon-webpack5-compiler-swc": "npm:4.0.2"
     "@storybook/react-webpack5": "npm:10.1.11"
@@ -927,10 +927,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@foxglove/tsconfig@npm:2.0.0":
-  version: 2.0.0
-  resolution: "@foxglove/tsconfig@npm:2.0.0"
-  checksum: 10c0/fccd3d2a67b85cc4532653930f6e0c311628458b489ee2e1e0aa0aa60d11b57bc2567b65344ff4007e238f42037eff22ec83f41d948e3be1a1d856ef207ac3d8
+"@foxglove/tsconfig@npm:3.2.0":
+  version: 3.2.0
+  resolution: "@foxglove/tsconfig@npm:3.2.0"
+  checksum: 10c0/7df6e49fe8c2e0b891554370dbbfc1d4bf394939e7414cee35f5a68282239240878c4f6fbaaf7b65cc86834bc5420879505b631585f6737214e1a14109ed562e
   languageName: node
   linkType: hard
 
