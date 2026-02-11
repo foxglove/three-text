@@ -1,12 +1,11 @@
 // -*- jsonc -*-
 {
-  "extends": "@foxglove/tsconfig/base",
+  "extends": "@foxglove/tsconfig/bundler",
   "include": ["**/*", ".storybook/**/*"],
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,
-    "moduleResolution": "bundler",
     "lib": ["DOM", "es2020"],
     "jsx": "react-jsx"
   }

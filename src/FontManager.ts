@@ -1,5 +1,5 @@
 import TinySDF from "@mapbox/tiny-sdf";
-import { EventDispatcher } from "three";
+import * as THREE from "three";
 
 export type CharInfo = {
   atlasX: number;
@@ -50,7 +50,7 @@ type EventMap = {
  * Manages the creation of a Signed Distance Field (SDF) font atlas, and performs text layout to
  * generate attributes for rendering text using the atlas.
  */
-export class FontManager extends EventDispatcher<EventMap> {
+export class FontManager extends THREE.EventDispatcher<EventMap> {
   private alphabet = "";
   readonly atlasData: AtlasData = {
     data: new Uint8ClampedArray(1024 * 1024),
@@ -64,8 +64,11 @@ export class FontManager extends EventDispatcher<EventMap> {
   #tinysdf: TinySDF;
   #lastCharPosition = { x: 0, y: 0, rowHeight: 0 };
 
-  constructor(public readonly options: FontManagerOptions = {}) {
+  public readonly options: FontManagerOptions;
+
+  constructor(options: FontManagerOptions = {}) {
     super();
+    this.options = options;
 
     this.options.fontSize = this.options.fontSize ?? 48;
     this.#buffer = Math.ceil(this.options.fontSize / 16);

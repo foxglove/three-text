@@ -34,6 +34,7 @@ export default tseslint.config(
   },
   {
     rules: {
+      "@typescript-eslint/consistent-type-imports": ["error", { disallowTypeAnnotations: false }],
       "@typescript-eslint/no-unsafe-assignment": "off",
       "@typescript-eslint/no-unsafe-member-access": "off",
       "@foxglove/prefer-hash-private": "off",

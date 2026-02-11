@@ -22,17 +22,15 @@ updates:
         patterns:
           - "storybook"
           - "@storybook/*"
+          - "eslint-plugin-storybook"
       jest:
         patterns:
           - "jest"
           - "jest-*"
-          - "babel-jest"
           - "@types/jest"
+          - "@swc/*"
       webpack:
         patterns:
           - "webpack"
           - "webpack-cli"
           - "webpack-dev-server"
-      babel:
-        patterns:
-          - "@babel/*"

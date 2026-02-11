@@ -1,6 +1,6 @@
 /** @jest-environment jsdom */
 
-import { FontManager } from "./FontManager";
+import { FontManager } from "./FontManager.ts";
 
 describe("FontManager", () => {
   it("emits error events", () => {

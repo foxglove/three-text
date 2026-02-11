@@ -12,19 +12,22 @@
     "email": "contact@foxglove.dev",
     "url": "https://foxglove.dev/"
   },
-  "module": "dist/esm/index.js",
-  "main": "dist/cjs/index.js",
+  "type": "module",
+  "exports": {
+    ".": "./dist/webgl/index.js",
+    "./webgpu": "./dist/webgpu/index.js"
+  },
   "files": [
     "dist",
     "src"
   ],
   "scripts": {
     "clean": "rimraf dist *.tsbuildinfo",
-    "prepack": "tsc -b tsconfig.build.json tsconfig.cjs.json",
-    "build": "tsc -b tsconfig.build.json tsconfig.cjs.json",
+    "prepack": "tsc -b tsconfig.build.json",
+    "build": "tsc -b tsconfig.build.json",
     "lint": "eslint --fix .",
     "lint:ci": "eslint .",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "jest",
     "typecheck": "tsc -b --noEmit tsconfig.json",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
@@ -37,13 +40,15 @@
   },
   "devDependencies": {
     "@foxglove/eslint-plugin": "2.1.0",
-    "@foxglove/tsconfig": "2.0.0",
+    "@foxglove/tsconfig": "3.2.0",
     "@storybook/addon-webpack5-compiler-swc": "4.0.2",
     "@storybook/react-webpack5": "10.1.11",
+    "@swc/core": "^1.15.11",
+    "@swc/jest": "^0.2.39",
     "@types/jest": "30.0.0",
     "@types/node": "25.0.3",
     "@types/react": "19.2.2",
-    "@types/three": "0.181.0",
+    "@types/three": "0.182.0",
     "eslint": "9.39.1",
     "eslint-plugin-storybook": "10.1.4",
     "globals": "16.5.0",
@@ -55,8 +60,7 @@
     "react-dom": "19.2.0",
     "rimraf": "6.1.2",
     "storybook": "10.1.11",
-    "three": "0.181.2",
-    "ts-jest": "29.4.5",
+    "three": "0.182.0",
     "typescript": "5.9.3"
   },
   "packageManager": "yarn@4.12.0"
