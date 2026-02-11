@@ -24,6 +24,12 @@ import {
   vertexStage,
   screenSize,
   screenDPR,
+  viewZToLogarithmicDepth,
+  viewZToPerspectiveDepth,
+  viewZToOrthographicDepth,
+  cameraNear,
+  cameraFar,
+  varyingProperty,
 } from "three/tsl";
 import { NodeMaterial } from "three/webgpu";
 import type { TextureNode, Node } from "three/webgpu";
@@ -62,6 +68,9 @@ export class LabelNodeMaterial extends NodeMaterial implements ILabelMaterial {
     const instanceBoxSize = attribute("instanceBoxSize", "vec2");
     const instanceCharSize = attribute("instanceCharSize", "vec2");
 
+    // Track view-space Z value from custom vertexNode (instead of default positionView.z) for log depth support
+    const vViewZ = varyingProperty("float", "vViewZ");
+
     // Adjust uv coordinates so they are in the 0-1 range in the character region
     const boxUv = uv()
       .mul(instanceBoxSize)
@@ -98,11 +107,26 @@ export class LabelNodeMaterial extends NodeMaterial implements ILabelMaterial {
             vertexPos.mul(2).div(screenSize).mul(screenDPR).mul(scale).mul(result.w),
           );
         });
+
+        vViewZ.assign(mvPosition.z);
       }).Else(() => {
-        result.assign(cameraProjectionMatrix.mul(modelViewMatrix).mul(vec4(vertexPos, 0.0, 1.0)));
+        const mvPosition = modelViewMatrix.mul(vec4(vertexPos, 0.0, 1.0)).toConst();
+        vViewZ.assign(mvPosition.z);
+        result.assign(cameraProjectionMatrix.mul(mvPosition));
       });
 
       return result;
+    })();
+
+    this.depthNode = Fn((builder) => {
+      const isPerspective = cameraProjectionMatrix[2][3].equal(-1);
+      return select(
+        isPerspective,
+        builder.renderer.logarithmicDepthBuffer
+          ? viewZToLogarithmicDepth(vViewZ, cameraNear, cameraFar)
+          : viewZToPerspectiveDepth(vViewZ, cameraNear, cameraFar),
+        viewZToOrthographicDepth(vViewZ, cameraNear, cameraFar),
+      );
     })();
 
     if (this.picking) {
