@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type ReactElement } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
-import type { Label } from "./LabelPool.ts";
+import type { Label } from "./Label.ts";
 import { LabelPool } from "./LabelPool.ts";
 
 const meta: Meta<typeof BasicTemplate> = {
