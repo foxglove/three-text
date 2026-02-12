@@ -1,2 +1,2 @@
-export * from "./FontManager";
-export * from "./LabelPool";
+export * from "./FontManager.ts";
+export * from "./LabelPool.ts";
