@@ -1,9 +1,25 @@
 import * as THREE from "three";
 
 import { LabelMaterial } from "./LabelMaterial.ts";
-import { LabelPool, InstancedMeshWithBasicBoundingSphere } from "./LabelPool.ts";
+import { LabelPool } from "./LabelPool.ts";
 
 const tempVec2 = new THREE.Vector2();
+
+/**
+ * Since THREE.js r151, InstancedMesh supports bounding sphere calculations using instanceMatrix.
+ * However, Label does not use instanceMatrix and the resulting bounding spheres are have NaN
+ * values. Instead, fall back to using the (non-instanced) bounding sphere of the geometry, which at
+ * least provides a semi-correct value based on the label's `position`.
+ */
+class InstancedMeshWithBasicBoundingSphere extends THREE.InstancedMesh {
+  override computeBoundingSphere(): void {
+    this.geometry.computeBoundingSphere();
+    const boundingSphere = this.geometry.boundingSphere;
+    if (boundingSphere) {
+      (this.boundingSphere ??= new THREE.Sphere()).copy(boundingSphere);
+    }
+  }
+}
 
 export class Label extends THREE.Object3D {
   text = "";

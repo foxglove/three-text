@@ -5,22 +5,6 @@ import type { FontManagerOptions } from "./FontManager.ts";
 import { FontManager } from "./FontManager.ts";
 import { Label } from "./Label.ts";
 
-/**
- * Since THREE.js r151, InstancedMesh supports bounding sphere calculations using instanceMatrix.
- * However, Label does not use instanceMatrix and the resulting bounding spheres are have NaN
- * values. Instead, fall back to using the (non-instanced) bounding sphere of the geometry, which at
- * least provides a semi-correct value based on the label's `position`.
- */
-export class InstancedMeshWithBasicBoundingSphere extends THREE.InstancedMesh {
-  override computeBoundingSphere(): void {
-    this.geometry.computeBoundingSphere();
-    const boundingSphere = this.geometry.boundingSphere;
-    if (boundingSphere) {
-      (this.boundingSphere ??= new THREE.Sphere()).copy(boundingSphere);
-    }
-  }
-}
-
 type EventMap = {
   scaleFactorChange: object;
   atlasChange: object;
