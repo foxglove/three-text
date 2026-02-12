@@ -14,8 +14,7 @@
   },
   "type": "module",
   "exports": {
-    ".": "./dist/webgl/index.js",
-    "./webgpu": "./dist/webgpu/index.js"
+    ".": "./dist/index.js"
   },
   "files": [
     "dist",
