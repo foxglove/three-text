@@ -30,14 +30,12 @@ in vec2 instanceUv;
 in vec2 instanceBoxSize, instanceCharSize;
 out mediump vec2 vUv;
 out mediump vec2 vInsideChar;
-out mediump vec2 vPosInLabel;
 void main() {
   // Adjust uv coordinates so they are in the 0-1 range in the character region
   vec2 boxUv = (uv * instanceBoxSize - (instanceCharPosition - instanceBoxPosition)) / instanceCharSize;
   vInsideChar = boxUv;
   vUv = (instanceUv + boxUv * instanceCharSize) / uTextureSize;
   vec2 vertexPos = (instanceBoxPosition + position.xy * instanceBoxSize - uAnchorPoint * uLabelSize) * uScale;
-  vPosInLabel = (instanceBoxPosition + position.xy * instanceBoxSize);
 
   // Adapted from THREE.ShaderLib.sprite
   if (uBillboard) {
@@ -98,7 +96,6 @@ uniform mediump vec4 uColor, uBackgroundColor;
 uniform float uScale;
 uniform vec2 uLabelSize;
 in mediump vec2 vUv;
-in mediump vec2 vPosInLabel;
 in mediump vec2 vInsideChar;
 out vec4 outColor;
 
