@@ -1,9 +1,10 @@
-import { Meta, StoryObj } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import { useEffect, useRef, useState, type ReactElement } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
-import { Label, LabelPool } from "./LabelPool";
+import type { Label } from "./LabelPool.ts";
+import { LabelPool } from "./LabelPool.ts";
 
 const meta: Meta<typeof BasicTemplate> = {
   title: "LabelPool",
@@ -41,6 +42,9 @@ const meta: Meta<typeof BasicTemplate> = {
 };
 export default meta;
 
+type StorySceneOptions = {
+  logDepthBuffer: boolean;
+};
 class StoryScene {
   labelPool = new LabelPool();
 
@@ -54,7 +58,10 @@ class StoryScene {
 
   bgCube?: THREE.Mesh;
 
-  constructor(private options: { logDepthBuffer: boolean }) {
+  private options: StorySceneOptions;
+
+  constructor(options: StorySceneOptions) {
+    this.options = options;
     this.perspectiveCamera.position.set(4, 4, 4);
     this.scene.background = new THREE.Color(0xf0f0f0);
     this.scene.add(new THREE.AxesHelper(5));

@@ -1,11 +1,10 @@
 // -*- jsonc -*-
 {
-  "extends": "@foxglove/tsconfig/base",
+  "extends": "@foxglove/tsconfig/bundler",
   "include": ["./src/**/*"],
   "compilerOptions": {
     "rootDir": "./src",
     "noEmit": true,
-    "moduleResolution": "bundler",
 
     // DOM and JSX settings should only apply to *.stories.*, but VS Code doesn't allow using a
     // different tsconfig for different files in the project.

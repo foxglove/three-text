@@ -1,6 +1,7 @@
 import { useEffect, useRef, type ReactElement } from "react";
 
-import { AtlasData, FontManager } from "./FontManager";
+import type { AtlasData } from "./FontManager.ts";
+import { FontManager } from "./FontManager.ts";
 
 export default {
   title: "FontManager",

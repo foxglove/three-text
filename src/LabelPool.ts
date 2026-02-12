@@ -1,7 +1,8 @@
 import * as THREE from "three";
 import { EventDispatcher } from "three";
 
-import { FontManager, FontManagerOptions } from "./FontManager";
+import type { FontManagerOptions } from "./FontManager.ts";
+import { FontManager } from "./FontManager.ts";
 
 const tempVec2 = new THREE.Vector2();
 
@@ -183,8 +184,11 @@ export class Label extends THREE.Object3D {
 
   lineHeight = 1;
 
-  constructor(public labelPool: LabelPool) {
+  public labelPool: LabelPool;
+
+  constructor(labelPool: LabelPool) {
     super();
+    this.labelPool = labelPool;
 
     this.geometry = new THREE.InstancedBufferGeometry();
 
