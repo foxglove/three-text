@@ -118,6 +118,8 @@ export class LabelNodeMaterial extends NodeMaterial implements ILabelMaterial {
       return result;
     })();
 
+    // The default depth behavior accounts for logarithmic depth, but doesn't work with our custom
+    // vertexNode so we customize it to use vViewZ.
     this.depthNode = Fn((builder) => {
       const isPerspective = cameraProjectionMatrix[2][3].equal(-1);
       return select(
