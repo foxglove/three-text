@@ -1,4 +1,4 @@
-import type { Label } from "../LabelPoolBase.ts";
+import type { Label } from "../Label.ts";
 import { LabelPoolBase } from "../LabelPoolBase.ts";
 import { LabelWebGL } from "./LabelWebGL.ts";
 

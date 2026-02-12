@@ -1,7 +1,7 @@
 import type * as THREE from "three";
 
 import type { ILabelMaterial } from "../ILabelMaterial.ts";
-import { Label } from "../LabelPoolBase.ts";
+import { Label } from "../Label.ts";
 import { LabelNodeMaterial } from "./LabelNodeMaterial.ts";
 
 export class LabelWebGPU extends Label {
