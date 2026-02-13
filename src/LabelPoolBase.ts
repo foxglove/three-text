@@ -1,9 +1,8 @@
 import * as THREE from "three";
-import { EventDispatcher } from "three";
 
 import type { FontManagerOptions } from "./FontManager.ts";
 import { FontManager } from "./FontManager.ts";
-import { Label } from "./Label.ts";
+import type { Label } from "./Label.ts";
 
 type EventMap = {
   scaleFactorChange: object;
@@ -11,33 +10,16 @@ type EventMap = {
   error: { error: Error };
 };
 
-export class LabelPool extends EventDispatcher<EventMap> {
+export abstract class LabelPoolBase extends THREE.EventDispatcher<EventMap> {
   atlasTexture: THREE.DataTexture;
 
   private availableLabels: Label[] = [];
   private disposed = false;
 
-  static QUAD_POINTS: THREE.Vector3Tuple[] = [
-    [0, 0, 0],
-    [0, 1, 0],
-    [1, 0, 0],
-    [1, 0, 0],
-    [0, 1, 0],
-    [1, 1, 0],
-  ];
-  static QUAD_POSITIONS = new THREE.BufferAttribute(new Float32Array(this.QUAD_POINTS.flat()), 3);
-  static QUAD_UVS = new THREE.BufferAttribute(
-    new Float32Array(this.QUAD_POINTS.flatMap(([x, y]) => [x, 1 - y])),
-    2,
-  );
-
   fontManager: FontManager;
   scaleFactor = 1;
 
-  setScaleFactor(scaleFactor: number): void {
-    this.scaleFactor = scaleFactor;
-    this.dispatchEvent({ type: "scaleFactorChange" });
-  }
+  protected abstract createLabel(): Label;
 
   constructor(options: FontManagerOptions = {}) {
     super();
@@ -65,6 +47,11 @@ export class LabelPool extends EventDispatcher<EventMap> {
     this._updateAtlasTexture();
   }
 
+  setScaleFactor(scaleFactor: number): void {
+    this.scaleFactor = scaleFactor;
+    this.dispatchEvent({ type: "scaleFactorChange" });
+  }
+
   updateAtlas(text: string): void {
     this.fontManager.update(text);
   }
@@ -86,7 +73,7 @@ export class LabelPool extends EventDispatcher<EventMap> {
   }
 
   acquire(): Label {
-    return this.availableLabels.pop() ?? new Label(this);
+    return this.availableLabels.pop() ?? this.createLabel();
   }
 
   release(label: Label): void {
