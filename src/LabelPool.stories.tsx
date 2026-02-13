@@ -307,7 +307,7 @@ export const LogarithmicDepthWebGPU: StoryObj<typeof meta> = {
 export const LogarithmicDepthWebGPUForceWebGL: StoryObj<typeof meta> = {
   name: "Logarithmic Depth (WebGPU, Force WebGL)",
   args: {
-    renderer: "webgpu",
+    renderer: "webgpu-force-webgl",
     logDepthBuffer: true,
   },
 };

@@ -22,7 +22,7 @@ label.setText("hello");
 label.setColor(r, g, b, a);
 label.setBackgroundColor(r, g, b, a);
 label.setBillboard(true);
-label.setSizeAttenutation(true); // sizeAttenuation=false requires billboard=true
+label.setSizeAttenuation(true); // sizeAttenuation=false requires billboard=true
 label.setAnchorPoint(x, y);
 label.setLineHeight(0.5);
 
