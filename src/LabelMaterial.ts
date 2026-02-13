@@ -22,7 +22,7 @@ uniform float uScale;
 uniform vec2 uLabelSize;
 uniform vec2 uTextureSize;
 uniform vec2 uAnchorPoint;
-uniform vec2 uCanvasSize;
+uniform vec2 resolution;
 
 in vec2 instanceBoxPosition, instanceCharPosition;
 in vec2 instanceUv;
@@ -52,10 +52,12 @@ void main() {
       scale.x = length(vec3(modelMatrix[0].xyz));
       scale.y = length(vec3(modelMatrix[1].xyz));
 
+      // Add offset in view space before projection so that setViewOffset
+      // (used by the Picker) works correctly. Multiplying by distance
+      // compensates for the perspective divide, keeping constant pixel size.
+      float dist = -mvPosition.z;
+      mvPosition.xy += vertexPos * 2. * dist / resolution * scale;
       gl_Position = projectionMatrix * mvPosition;
-
-      // Add position after projection to maintain constant pixel size
-      gl_Position.xy += vertexPos * 2. / uCanvasSize * scale * gl_Position.w;
     }
   } else {
     gl_Position = projectionMatrix * modelViewMatrix * vec4(vertexPos, 0.0, 1.0);
@@ -125,7 +127,7 @@ void main() {
         uBillboard: { value: false },
         uSizeAttenuation: { value: true },
         uLabelSize: { value: [0, 0] },
-        uCanvasSize: { value: [0, 0] },
+        resolution: { value: new THREE.Vector2(1, 1) },
         uScale: { value: 0 },
         uTextureSize: {
           value: [params.atlasTexture?.image.width ?? 0, params.atlasTexture?.image.height ?? 0],
