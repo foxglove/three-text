@@ -71,10 +71,8 @@ export class Label extends THREE.Object3D {
 
     this.mesh.onBeforeRender = (renderer, _scene, _camera, _geometry, _material, _group) => {
       renderer.getSize(tempVec2);
-      this.material.uniforms.uCanvasSize!.value[0] = tempVec2.x;
-      this.material.uniforms.uCanvasSize!.value[1] = tempVec2.y;
-      this.pickingMaterial.uniforms.uCanvasSize!.value[0] = tempVec2.x;
-      this.pickingMaterial.uniforms.uCanvasSize!.value[1] = tempVec2.y;
+      (this.material.uniforms.resolution!.value as THREE.Vector2).copy(tempVec2);
+      (this.pickingMaterial.uniforms.resolution!.value as THREE.Vector2).copy(tempVec2);
     };
 
     this.add(this.mesh);
