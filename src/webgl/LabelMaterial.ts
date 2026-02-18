@@ -1,12 +1,13 @@
 import * as THREE from "three";
 
-export class LabelMaterial extends THREE.ShaderMaterial {
+import type { ILabelMaterial } from "../ILabelMaterial.ts";
+
+const tempVec2 = new THREE.Vector2();
+
+export class LabelMaterial extends THREE.ShaderMaterial implements ILabelMaterial {
   picking: boolean;
 
-  constructor(params: {
-    atlasTexture?: THREE.Texture<THREE.DataTextureImageData>;
-    picking?: boolean;
-  }) {
+  constructor(params: { atlasTexture?: THREE.DataTexture; picking?: boolean }) {
     super({
       glslVersion: THREE.GLSL3,
       vertexShader: /* glsl */ `\
@@ -29,14 +30,12 @@ in vec2 instanceUv;
 in vec2 instanceBoxSize, instanceCharSize;
 out mediump vec2 vUv;
 out mediump vec2 vInsideChar;
-out mediump vec2 vPosInLabel;
 void main() {
   // Adjust uv coordinates so they are in the 0-1 range in the character region
   vec2 boxUv = (uv * instanceBoxSize - (instanceCharPosition - instanceBoxPosition)) / instanceCharSize;
   vInsideChar = boxUv;
   vUv = (instanceUv + boxUv * instanceCharSize) / uTextureSize;
   vec2 vertexPos = (instanceBoxPosition + position.xy * instanceBoxSize - uAnchorPoint * uLabelSize) * uScale;
-  vPosInLabel = (instanceBoxPosition + position.xy * instanceBoxSize);
 
   // Adapted from THREE.ShaderLib.sprite
   if (uBillboard) {
@@ -97,7 +96,6 @@ uniform mediump vec4 uColor, uBackgroundColor;
 uniform float uScale;
 uniform vec2 uLabelSize;
 in mediump vec2 vUv;
-in mediump vec2 vPosInLabel;
 in mediump vec2 vInsideChar;
 out vec4 outColor;
 
@@ -140,6 +138,65 @@ void main() {
       depthWrite: true,
     });
 
+    this.onBeforeRender = (renderer, _scene, _camera, _geometry, _material, _group) => {
+      renderer.getSize(tempVec2);
+      this.uniforms.uCanvasSize!.value[0] = tempVec2.x;
+      this.uniforms.uCanvasSize!.value[1] = tempVec2.y;
+    };
+
     this.picking = params.picking ?? false;
+  }
+
+  setTextureSize(width: number, height: number): void {
+    this.uniforms.uTextureSize!.value[0] = width;
+    this.uniforms.uTextureSize!.value[1] = height;
+  }
+
+  setLabelSize(width: number, height: number): void {
+    this.uniforms.uLabelSize!.value[0] = width;
+    this.uniforms.uLabelSize!.value[1] = height;
+  }
+
+  setColor(r: number, g: number, b: number, a: number): void {
+    this.uniforms.uColor!.value[0] = r;
+    this.uniforms.uColor!.value[1] = g;
+    this.uniforms.uColor!.value[2] = b;
+    this.uniforms.uColor!.value[3] = a;
+    this.#updateTransparency();
+  }
+
+  setBackgroundColor(r: number, g: number, b: number, a: number): void {
+    this.uniforms.uBackgroundColor!.value[0] = r;
+    this.uniforms.uBackgroundColor!.value[1] = g;
+    this.uniforms.uBackgroundColor!.value[2] = b;
+    this.uniforms.uBackgroundColor!.value[3] = a;
+    this.#updateTransparency();
+  }
+
+  // eslint-disable-next-line @foxglove/no-boolean-parameters
+  setBillboard(billboard: boolean): void {
+    this.uniforms.uBillboard!.value = billboard;
+  }
+
+  // eslint-disable-next-line @foxglove/no-boolean-parameters
+  setSizeAttenuation(sizeAttenuation: boolean): void {
+    this.uniforms.uSizeAttenuation!.value = sizeAttenuation;
+  }
+
+  setAnchorPoint(x: number, y: number): void {
+    this.uniforms.uAnchorPoint!.value[0] = x;
+    this.uniforms.uAnchorPoint!.value[1] = y;
+  }
+
+  setScale(scale: number): void {
+    this.uniforms.uScale!.value = scale;
+  }
+
+  #updateTransparency() {
+    const bgOpacity = this.uniforms.uBackgroundColor!.value[3];
+    const fgOpacity = this.uniforms.uColor!.value[3];
+    const transparent = bgOpacity < 1 || fgOpacity < 1;
+    this.transparent = transparent;
+    this.depthWrite = !transparent;
   }
 }
