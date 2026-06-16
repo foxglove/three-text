@@ -22,7 +22,7 @@ import {
   mix,
   select,
   vertexStage,
-  screenSize,
+  viewportSize,
   screenDPR,
   viewZToLogarithmicDepth,
   viewZToPerspectiveDepth,
@@ -100,12 +100,16 @@ export class LabelNodeMaterial extends NodeMaterial implements ILabelMaterial {
           scale.x.assign(length(vec3(modelWorldMatrix[0].xyz)));
           scale.y.assign(length(vec3(modelWorldMatrix[1].xyz)));
 
-          result.assign(cameraProjectionMatrix.mul(mvPosition));
-
-          // Add position after projection to maintain constant pixel size
-          result.xy.addAssign(
-            vertexPos.mul(2).div(screenSize).mul(screenDPR).mul(scale).mul(result.w),
+          const ndcOffset = vertexPos.mul(2).div(viewportSize).mul(screenDPR).mul(scale);
+          const projectionScale = vec2(cameraProjectionMatrix[0][0], cameraProjectionMatrix[1][1]);
+          const depthScale = select(
+            cameraProjectionMatrix[2][3].equal(-1),
+            mvPosition.z.negate(),
+            1.0,
           );
+
+          mvPosition.xy.addAssign(ndcOffset.mul(depthScale).div(projectionScale));
+          result.assign(cameraProjectionMatrix.mul(mvPosition));
         });
 
         vViewZ.assign(mvPosition.z);
