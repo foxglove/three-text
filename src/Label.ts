@@ -91,6 +91,9 @@ export abstract class Label extends THREE.Object3D {
 
     this.mesh = new InstancedMeshWithBasicBoundingSphere(this.geometry, this.material, 1);
     this.mesh.userData.pickingMaterial = this.pickingMaterial;
+    this.mesh.onBeforeRender = (renderer, scene, camera, geometry, _material, group) => {
+      this.pickingMaterial.onBeforeRender(renderer, scene, camera, geometry, this.mesh, group);
+    };
 
     this.add(this.mesh);
 

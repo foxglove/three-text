@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 import type { ILabelMaterial } from "../ILabelMaterial.ts";
 
-const tempVec2 = new THREE.Vector2();
+const tempVec4 = new THREE.Vector4();
 
 export class LabelMaterial extends THREE.ShaderMaterial implements ILabelMaterial {
   picking: boolean;
@@ -23,7 +23,8 @@ uniform float uScale;
 uniform vec2 uLabelSize;
 uniform vec2 uTextureSize;
 uniform vec2 uAnchorPoint;
-uniform vec2 uCanvasSize;
+uniform float uPixelRatio;
+uniform vec2 resolution;
 
 in vec2 instanceBoxPosition, instanceCharPosition;
 in vec2 instanceUv;
@@ -51,10 +52,11 @@ void main() {
       scale.x = length(vec3(modelMatrix[0].xyz));
       scale.y = length(vec3(modelMatrix[1].xyz));
 
+      vec2 ndcOffset = vertexPos * scale * uPixelRatio * 2.0 / resolution;
+      vec2 projectionScale = vec2(projectionMatrix[0][0], projectionMatrix[1][1]);
+      float depthScale = isPerspectiveMatrix(projectionMatrix) ? -mvPosition.z : 1.0;
+      mvPosition.xy += ndcOffset * depthScale / projectionScale;
       gl_Position = projectionMatrix * mvPosition;
-
-      // Add position after projection to maintain constant pixel size
-      gl_Position.xy += vertexPos * 2. / uCanvasSize * scale * gl_Position.w;
     }
   } else {
     gl_Position = projectionMatrix * modelViewMatrix * vec4(vertexPos, 0.0, 1.0);
@@ -123,7 +125,8 @@ void main() {
         uBillboard: { value: false },
         uSizeAttenuation: { value: true },
         uLabelSize: { value: [0, 0] },
-        uCanvasSize: { value: [0, 0] },
+        uPixelRatio: { value: 1 },
+        resolution: { value: new THREE.Vector2(0, 0) },
         uScale: { value: 0 },
         uTextureSize: {
           value: [params.atlasTexture?.image.width ?? 0, params.atlasTexture?.image.height ?? 0],
@@ -139,9 +142,11 @@ void main() {
     });
 
     this.onBeforeRender = (renderer, _scene, _camera, _geometry, _material, _group) => {
-      renderer.getSize(tempVec2);
-      this.uniforms.uCanvasSize!.value[0] = tempVec2.x;
-      this.uniforms.uCanvasSize!.value[1] = tempVec2.y;
+      renderer.getCurrentViewport(tempVec4);
+      const pixelRatio = renderer.getPixelRatio();
+      this.uniforms.uPixelRatio!.value = pixelRatio;
+      const resolution = this.uniforms.resolution!.value as THREE.Vector2;
+      resolution.set(tempVec4.z, tempVec4.w);
     };
 
     this.picking = params.picking ?? false;
