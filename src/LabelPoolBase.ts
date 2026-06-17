@@ -3,6 +3,7 @@ import * as THREE from "three";
 import type { FontManagerOptions } from "./FontManager.ts";
 import { FontManager } from "./FontManager.ts";
 import type { Label } from "./Label.ts";
+import type { ThreeTextLabel } from "./ThreeTextLabel.ts";
 
 type EventMap = {
   scaleFactorChange: object;
@@ -72,16 +73,18 @@ export abstract class LabelPoolBase extends THREE.EventDispatcher<EventMap> {
     this.dispatchEvent({ type: "atlasChange" });
   }
 
-  acquire(): Label {
-    return this.availableLabels.pop() ?? this.createLabel();
+  acquire<TObject3D extends object = object>(): ThreeTextLabel<TObject3D> {
+    return (this.availableLabels.pop() ??
+      this.createLabel()) as unknown as ThreeTextLabel<TObject3D>;
   }
 
-  release(label: Label): void {
+  release<TObject3D extends object>(label: ThreeTextLabel<TObject3D>): void {
+    const pooledLabel = label as unknown as Label;
     if (this.disposed) {
-      label.dispose();
+      pooledLabel.dispose();
     } else {
-      label.removeFromParent();
-      this.availableLabels.push(label);
+      pooledLabel.removeFromParent();
+      this.availableLabels.push(pooledLabel);
     }
   }
 

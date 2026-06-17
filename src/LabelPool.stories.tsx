@@ -657,7 +657,7 @@ function BasicTemplate({
       throw new Error("expected canvas");
     }
     storyScene.setCanvas(canvas);
-    const newLabel = storyScene.labelPool.acquire();
+    const newLabel = storyScene.labelPool.acquire<Label>();
     newLabel.name = "Label";
     setLabel(newLabel);
 
