@@ -802,7 +802,7 @@ __metadata:
   dependencies:
     "@foxglove/eslint-plugin": "npm:2.1.0"
     "@foxglove/tsconfig": "npm:3.2.0"
-    "@mapbox/tiny-sdf": "npm:2.0.6"
+    "@mapbox/tiny-sdf": "npm:2.0.7"
     "@storybook/addon-webpack5-compiler-swc": "npm:4.0.2"
     "@storybook/react-webpack5": "npm:10.1.11"
     "@swc/core": "npm:^1.15.11"
@@ -1274,10 +1274,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mapbox/tiny-sdf@npm:2.0.6":
-  version: 2.0.6
-  resolution: "@mapbox/tiny-sdf@npm:2.0.6"
-  checksum: 10c0/cb272578a30c88d6694937af9b084106aa251e92c71089e7d57b0df8152fd0ce0598d5816182a4cd478dc40b188ea680cb6d53f4385107719424beabe7ed4e13
+"@mapbox/tiny-sdf@npm:2.0.7":
+  version: 2.0.7
+  resolution: "@mapbox/tiny-sdf@npm:2.0.7"
+  checksum: 10c0/f117d8537ee4b5ee2deed54b9b426792744c15a649681305b4fb21b608b7c6a815015f015cd612923cc8efa30424d0440abfc1af2c85eda00a726024bb4f3ede
   languageName: node
   linkType: hard
 
