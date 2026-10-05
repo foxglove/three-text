@@ -1,0 +1,10 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "three-text-storybook",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "storybook-static",
+  },
+  "workers_dev": false,
+  "preview_urls": true,
+}

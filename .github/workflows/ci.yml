@@ -56,12 +56,12 @@ jobs:
       - run: yarn build-storybook
 
       - name: Deploy Storybook
-        uses: cloudflare/wrangler-action@v3
-        # Only run if not a fork, since we do not have
-        # access to secrets in these environments.
-        if: ${{ !github.event.pull_request.head.repo.fork }}
+        uses: foxglove/cloudflare-action@v1
+        # Fork PRs do not have access to secrets. Tag pushes are skipped
+        # because the action would treat the tag name as a preview branch.
+        if: ${{ !github.event.pull_request.head.repo.fork && github.ref_type != 'tag' }}
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          type: workers
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN_THREE_TEXT_STORYBOOK }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy storybook-static --project-name=foxglove-three-text-storybook
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
