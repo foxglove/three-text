@@ -61,7 +61,8 @@
     "rimraf": "6.1.2",
     "storybook": "10.1.11",
     "three": "0.182.0",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "wrangler": "4.147.0"
   },
   "packageManager": "yarn@4.12.0"
 }
